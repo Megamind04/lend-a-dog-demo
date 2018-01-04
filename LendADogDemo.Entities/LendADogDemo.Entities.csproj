@@ -97,7 +97,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataContexts\IdentityDb.cs" />
+    <Compile Include="DataContexts\IdentityMigrations\201801040918207_InitialCreate.cs" />
+    <Compile Include="DataContexts\IdentityMigrations\201801040918207_InitialCreate.Designer.cs">
+      <DependentUpon>201801040918207_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataContexts\IdentityMigrations\Configuration.cs" />
     <Compile Include="DataContexts\LendADogDemoDb.cs" />
+    <Compile Include="DataContexts\LendADogMigrations\201801040932063_InitialCreate.cs" />
+    <Compile Include="DataContexts\LendADogMigrations\201801040932063_InitialCreate.Designer.cs">
+      <DependentUpon>201801040932063_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataContexts\LendADogMigrations\Configuration.cs" />
     <Compile Include="Models\Dog.cs" />
     <Compile Include="Models\DogOwner.cs" />
     <Compile Include="Models\DogPhoto.cs" />
@@ -111,6 +121,14 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DataContexts\IdentityMigrations\201801040918207_InitialCreate.resx">
+      <DependentUpon>201801040918207_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\LendADogMigrations\201801040932063_InitialCreate.resx">
+      <DependentUpon>201801040932063_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
