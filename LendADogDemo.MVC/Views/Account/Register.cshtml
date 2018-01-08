@@ -3,38 +3,100 @@
     ViewBag.Title = "Register";
 }
 
-<h2>@ViewBag.Title.</h2>
+<div class="page-section clearfix container intro-text left-0 text-center bg-faded p-5 rounded">
+    <div class="row">
+        <div class="col-sm-8">
+            @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                <h4>Create a new account.</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-{
-    @Html.AntiForgeryToken()
-    <h4>Create a new account.</h4>
-    <hr />
-    @Html.ValidationSummary("", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                <div class="form-group row">
+                    <div class="input-group mb-3">
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", @aria_describedby = "basic-addon1" })
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">First Name</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-7">
+                        @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "badge badge-pill badge-danger " })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="input-group mb-3">
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", @aria_describedby = "basic-addon1" })
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Last Name</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-7">
+                        @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "badge badge-pill badge-danger " })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="input-group mb-3">
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @aria_describedby = "basic-addon1" })
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">@@Email</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-7">
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "badge badge-pill badge-danger " })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="input-group mb-3">
+                        @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", @aria_describedby = "basic-addon1" })
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Phone</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-7">
+                        @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "badge badge-pill badge-danger " })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="input-group mb-3">
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", @aria_describedby = "basic-addon1" })
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Password</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-7">
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "badge badge-pill badge-danger " })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="input-group mb-3">
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", @aria_describedby = "basic-addon1" })
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Confirm Password</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-7">
+                        @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "badge badge-pill badge-danger " })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-2">
+                        <input type="submit" value="Register" class="btn btn-outline-primary" />
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-sm-4 align-self-center">
+            <img src="~/img/Sleeping-Puppy.jpg" class="img-fluid" />
         </div>
     </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Register" />
-        </div>
-    </div>
-}
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

@@ -108,6 +108,22 @@
       <DependentUpon>201801040932063_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="DataContexts\LendADogMigrations\Configuration.cs" />
+    <Compile Include="Infrastructure\DogOwnerRepository.cs" />
+    <Compile Include="Infrastructure\DogPhotoRepository.cs" />
+    <Compile Include="Infrastructure\DogRepository.cs" />
+    <Compile Include="Infrastructure\GenericRepository.cs" />
+    <Compile Include="Infrastructure\MainMessageBoardRepository.cs" />
+    <Compile Include="Infrastructure\PrivateMessageBoardRepository.cs" />
+    <Compile Include="Infrastructure\RequestMessageRepository.cs" />
+    <Compile Include="UoW\UnitOfWork.cs" />
+    <Compile Include="Interfaces\IDogOwnerRepository.cs" />
+    <Compile Include="Interfaces\IDogPhotoRepository.cs" />
+    <Compile Include="Interfaces\IDogRepository.cs" />
+    <Compile Include="Interfaces\IMainMessageBoardRepository.cs" />
+    <Compile Include="Interfaces\IPrivateMessageBoardRepository.cs" />
+    <Compile Include="Interfaces\IRepository.cs" />
+    <Compile Include="Interfaces\IRequestMessageRepository.cs" />
+    <Compile Include="UoW\IUnitOfWork.cs" />
     <Compile Include="Models\Dog.cs" />
     <Compile Include="Models\DogOwner.cs" />
     <Compile Include="Models\DogPhoto.cs" />

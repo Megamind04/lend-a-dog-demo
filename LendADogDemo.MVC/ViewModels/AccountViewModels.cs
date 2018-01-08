@@ -64,6 +64,21 @@ namespace LendADogDemo.MVC.ViewModels
 
     public class RegisterViewModel
     {
+        [Required(ErrorMessage = "Please Enter your Name.")]
+        [Display(Name = "First Name")]
+        [StringLength(50,ErrorMessage ="To long")]
+        public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "Please Enter your LastName.")]
+        [Display(Name = "Last Name")]
+        [StringLength(50, ErrorMessage = "To long")]
+        public string LastName { get; set; }
+
+        [Required(ErrorMessage = "Your must provide a Phone Number.")]
+        [Display(Name = "Phone Number")]
+        [DataType(DataType.PhoneNumber)]
+        public string PhoneNumber { get; set; }
+
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
