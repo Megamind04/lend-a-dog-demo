@@ -9,6 +9,7 @@ namespace LendADogDemo.Entities.Models
         [Key]
         public int DogPhotoID { get; set; }
 
+        [Required]
         [ForeignKey("Dog")]
         public int DogID { get; set; }
 

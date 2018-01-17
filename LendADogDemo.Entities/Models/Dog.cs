@@ -19,14 +19,19 @@ namespace LendADogDemo.Entities.Models
         [Key]
         public int DogID { get; set; }
 
+        [Required]
         [ForeignKey("DogOwner")]
         public string DogOwnerID { get; set; }
 
+        [Required]
         [EnumDataType(typeof(Size))]
         public Size? DogSize { get; set; }
 
+        [Required]
+        [StringLength(50)]
         public string DogName { get; set; }
 
+        [StringLength(150)]
         public string Description { get; set; }
 
         

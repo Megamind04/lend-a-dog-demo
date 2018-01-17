@@ -1,0 +1,67 @@
+﻿@model LendADogDemo.MVC.ViewModels.PersonalDashboardViewModel
+@{
+    ViewBag.Title = "PersonalDashboardMain";
+}
+
+<div class="page-section clearfix container intro-text left-0 text-center bg-faded p-5 rounded" style="max-width:1600px">
+    <div class="row">
+        <div class="col col-lg-4">
+            <ul class="list-group" style="text-align:start">
+                <li class="list-group-item list-group-item-warning">
+                    Conversations : 
+                </li>
+                @foreach (var item in Model.Conversations)
+                {
+                    <li class="list-group-item">
+                        @Html.HiddenFor(m => item.OtherID)
+                        <strong>Conversations With: </strong>@Html.DisplayFor(m => item.OtherFullName)<br />
+                        <strong>Last Message: </strong>@Html.DisplayFor(m => item.LastMessage)
+
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="col">
+        </div>
+        <div class="col col-lg-3">
+            <ul class="list-group" style="text-align:start">
+                <li class="list-group-item list-group-item-warning">
+                    Confirmation Requests :
+                </li>
+                @foreach (var item in Model.NotConfirmedUsersRequests)
+                {
+                    <li class="list-group-item">
+                        @Html.HiddenFor(m => item.RequestFromID)
+                        <strong>Request From: </strong>@Html.DisplayFor(m => item.RequestFromFullName)<br />
+                        <strong>Request Message: </strong>@Html.DisplayFor(m => item.Message)
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="col">
+        </div>
+    </div>
+</div>
+
+
+<div class="page-section clearfix container intro-text left-0 text-center bg-faded p-5 rounded">
+    <div class="input-group">
+        <input type="submit" value="Add New Dog" class="btn btn-primary" />
+    </div>
+    <br />
+    <ul class="list-group" style="text-align:start">
+        <li class="list-group-item list-group-item-warning">
+            My Dogs :
+        </li>
+        @foreach (var item in Model.Dogs)
+        {
+            <li class="list-group-item">
+                @Html.HiddenFor(m => item.DogID)
+                @Html.HiddenFor(m => item.DogOwnerID)
+                <strong>Dog Name: </strong>@Html.DisplayFor(m => item.DogName)<br />
+                <strong>Dog Size: </strong>@Html.DisplayFor(m => item.DogSize)<br />
+                <strong>Description: </strong>@Html.DisplayFor(m => item.Description)
+            </li>
+        }
+    </ul>
+</div>

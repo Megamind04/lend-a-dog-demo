@@ -9,9 +9,12 @@ namespace LendADogDemo.Entities.Models
         [Key]
         public int MainBoardID { get; set; }
 
+        [Required]
         [ForeignKey("DogOwner")]
         public string DogOwnerID { get; set; }
 
+        [Required]
+        [StringLength(150)]
         public string RequestMessage { get; set; }
 
         public DateTime MessageCreated { get; set; }

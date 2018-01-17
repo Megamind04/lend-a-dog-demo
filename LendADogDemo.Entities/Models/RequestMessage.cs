@@ -8,15 +8,22 @@ namespace LendADogDemo.Entities.Models
         [Key]
         public int RequestMessID { get; set; }
 
-        [ForeignKey("DogOwner")]
-        public string DogOwnerID { get; set; }
+        [Required]
+        public string SendFromID { get; set; }
 
-        public string RequestFrom { get; set; }
+        [Required]
+        public string ReceiverID { get; set; }
 
         public string Message { get; set; }
 
 
 
-        public virtual DogOwner DogOwner { get; set; }
+        [ForeignKey("SendFromID")]
+        [InverseProperty("SendRequestMessages")]
+        public virtual DogOwner SendRequestMessage { get; set; }
+
+        [ForeignKey("ReceiverID")]
+        [InverseProperty("ReceivedRequestMessages")]
+        public virtual DogOwner ReceivedRequestMessage { get; set; }
     }
 }

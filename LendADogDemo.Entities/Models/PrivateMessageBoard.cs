@@ -8,10 +8,14 @@ namespace LendADogDemo.Entities.Models
         [Key]
         public int PrivateMessID { get; set; }
 
+        [Required]
         public string SenderID { get; set; }
 
+        [Required]
         public string ReceiverID { get; set; }
 
+        [Required]
+        [StringLength(150)]
         public string Message { get; set; } 
 
 

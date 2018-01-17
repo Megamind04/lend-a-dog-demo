@@ -107,6 +107,10 @@
     <Compile Include="DataContexts\LendADogMigrations\201801040932063_InitialCreate.Designer.cs">
       <DependentUpon>201801040932063_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataContexts\LendADogMigrations\201801101312339_Fix RequestMessage.cs" />
+    <Compile Include="DataContexts\LendADogMigrations\201801101312339_Fix RequestMessage.Designer.cs">
+      <DependentUpon>201801101312339_Fix RequestMessage.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataContexts\LendADogMigrations\Configuration.cs" />
     <Compile Include="Infrastructure\DogOwnerRepository.cs" />
     <Compile Include="Infrastructure\DogPhotoRepository.cs" />
@@ -144,6 +148,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\LendADogMigrations\201801040932063_InitialCreate.resx">
       <DependentUpon>201801040932063_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\LendADogMigrations\201801101312339_Fix RequestMessage.resx">
+      <DependentUpon>201801101312339_Fix RequestMessage.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
