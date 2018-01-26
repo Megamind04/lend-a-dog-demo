@@ -7,6 +7,7 @@ namespace LendADogDemo.Entities.DataContexts.IdentityMigrations
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
+    using LendADogDemo.Entities.Helpers;
 
     internal sealed class Configuration : DbMigrationsConfiguration<LendADogDemo.Entities.DataContexts.IdentityDb>
     {
@@ -61,6 +62,28 @@ namespace LendADogDemo.Entities.DataContexts.IdentityMigrations
                 role.Name = "DogOwner";
                 roleManager.Create(role);
             }
+
+            //for (int i = 1; i <= 30; i++)
+            //{
+            //    string userEmail = RandomGenerator.GetRandomEmail(5);
+            //    string password = "Password*1";
+            //    if (!context.Users.Any(u => u.UserName == userEmail))
+            //    {
+            //        var store = new UserStore<ApplicationUser>(context);
+            //        var menager = new UserManager<ApplicationUser>(store);
+            //        var user = new ApplicationUser()
+            //        {
+            //            FirstName = RandomGenerator.GetRandomFirstOrLastName(FirstOrLastName.firstName),
+            //            LastName = RandomGenerator.GetRandomFirstOrLastName(FirstOrLastName.lastName),
+            //            PhoneNumber = RandomGenerator.GetRandomPhoneNumer(9),
+            //            UserName = userEmail,
+            //            Email = userEmail,
+            //            IsConfirmed = false,
+            //            LockoutEnabled = true
+            //        };
+            //        menager.Create(user, password);
+            //    }
+            //}
         }
     }
 }

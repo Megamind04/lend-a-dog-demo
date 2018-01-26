@@ -63,8 +63,9 @@ namespace LendADogDemo.MVC.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<IUnitOfWork>().To<UnitOfWork>().InSingletonScope();
-            kernel.Bind<IPersonalDashboardService>().To<PersonalDashboardService>().InSingletonScope();
+            kernel.Bind<IUnitOfWork>().To<UnitOfWork>().InRequestScope();
+            kernel.Bind<IPersonalDashboardService>().To<PersonalDashboardService>().InRequestScope();
+            kernel.Bind<IDogService>().To<DogService>().InRequestScope();
         }        
     }
 }

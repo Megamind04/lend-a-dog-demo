@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -24,16 +25,24 @@ namespace LendADogDemo.MVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public ActionResult PersonalDashboardMain(string userId)
+        public ActionResult PersonalDashboardMain()
         {
-            PersonalDashboardViewModel personalDashboard = new PersonalDashboardViewModel();
-            
-            if(userId == null)
+            string userId = User.Identity.GetUserId();
+            if (userId == null)
             {
                 return RedirectToAction("Index", "Home");
             }
-            personalDashboard = _personalDashboardService.GetMyPersonalDashboardModel(userId);
+            PersonalDashboardViewModel personalDashboard = _personalDashboardService.GetMyPersonalDashboardModel(userId);
             return View(personalDashboard);
+        }
+
+        public ActionResult ShowPhoto(int dogId)
+        {
+            var imageToDisplay = _personalDashboardService.GetLastImage(dogId);
+
+            return imageToDisplay != null 
+                ? File(imageToDisplay, "image/jpeg") 
+                : null;
         }
     }
 }

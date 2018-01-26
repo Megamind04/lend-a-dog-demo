@@ -7,9 +7,9 @@ using System.Web;
 
 public enum Size
 {
-    Small,
-    Average,
-    Large
+    Small = 1,
+    Average = 2,
+    Large = 3
 }
 
 namespace LendADogDemo.Entities.Models

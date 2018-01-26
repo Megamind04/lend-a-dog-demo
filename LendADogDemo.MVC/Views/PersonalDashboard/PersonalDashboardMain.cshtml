@@ -8,7 +8,7 @@
         <div class="col col-lg-4">
             <ul class="list-group" style="text-align:start">
                 <li class="list-group-item list-group-item-warning">
-                    Conversations : 
+                    Conversations :
                 </li>
                 @foreach (var item in Model.Conversations)
                 {
@@ -16,7 +16,6 @@
                         @Html.HiddenFor(m => item.OtherID)
                         <strong>Conversations With: </strong>@Html.DisplayFor(m => item.OtherFullName)<br />
                         <strong>Last Message: </strong>@Html.DisplayFor(m => item.LastMessage)
-
                     </li>
                 }
             </ul>
@@ -42,26 +41,51 @@
         </div>
     </div>
 </div>
+<section class="page-section clearfix container intro-text left-0 text-center p-5 rounded MegaGrid">
+    @foreach (var item in Model.Dogs)
+    {
+        <div class="myGridBase">
+            <div class="myGridRow1">
+                @Html.DisplayFor(x => item.DogName)
+            </div>
+            <div class="myGridRow2">
+                @Html.DisplayFor(x => item.DogSize.Value)
+            </div>
+            <div class="myGridRow3">
+                <img src="@Url.Action("ShowPhoto","PersonalDashboard",routeValues: new { dogId = item.DogID})" class="img-fluid"/>
+                @*<img src="@String.Format("data:image/jpg;base64,{0}", item.Photo.DogPhoto)" class="img-fluid"/>*@
+            </div>
+            <div class="myGridRow4">
+                @Html.DisplayFor(x => item.Description)
+            </div>
+        </div>
 
-
-<div class="page-section clearfix container intro-text left-0 text-center bg-faded p-5 rounded">
-    <div class="input-group">
-        <input type="submit" value="Add New Dog" class="btn btn-primary" />
-    </div>
-    <br />
-    <ul class="list-group" style="text-align:start">
-        <li class="list-group-item list-group-item-warning">
-            My Dogs :
-        </li>
-        @foreach (var item in Model.Dogs)
-        {
-            <li class="list-group-item">
-                @Html.HiddenFor(m => item.DogID)
-                @Html.HiddenFor(m => item.DogOwnerID)
-                <strong>Dog Name: </strong>@Html.DisplayFor(m => item.DogName)<br />
-                <strong>Dog Size: </strong>@Html.DisplayFor(m => item.DogSize)<br />
-                <strong>Description: </strong>@Html.DisplayFor(m => item.Description)
+    }
+</section>
+@*<div class="page-section clearfix container intro-text left-0 text-center bg-faded p-5 rounded">
+        <div class="input-group">
+            @Html.ActionLink("Add new dog", "AddNewDog", "Dog", null, htmlAttributes: new { @class = "btn btn-primary" })
+        </div>
+        <br />
+        <ul class="list-group" style="text-align:start">
+            <li class="list-group-item list-group-item-warning">
+                My Dogs :
             </li>
-        }
-    </ul>
-</div>
+            @foreach (var item in Model.Dogs)
+            {
+
+                <li class="list-group-item">
+                    @Html.HiddenFor(m => item.DogID)
+                    @Html.HiddenFor(m => item.DogOwnerID)
+                    <strong>Dog Name: </strong>@Html.DisplayFor(m => item.DogName)<br />
+                    <strong>Dog Size: </strong>@Html.DisplayFor(m => item.DogSize)<br />
+                    <strong>Description: </strong>@Html.DisplayFor(m => item.Description)<br />
+                    @if (item.Photo != null)
+                    {
+                        <img src="@String.Format("data:image/jpg;base64,{0}", item.Photo.DogPhoto)" class="img-fluid"/>
+                    }
+                </li>
+
+            }
+        </ul>
+    </div>*@

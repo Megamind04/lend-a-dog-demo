@@ -112,6 +112,7 @@
       <DependentUpon>201801101312339_Fix RequestMessage.cs</DependentUpon>
     </Compile>
     <Compile Include="DataContexts\LendADogMigrations\Configuration.cs" />
+    <Compile Include="Helpers\RandomGenerator.cs" />
     <Compile Include="Infrastructure\DogOwnerRepository.cs" />
     <Compile Include="Infrastructure\DogPhotoRepository.cs" />
     <Compile Include="Infrastructure\DogRepository.cs" />
@@ -153,5 +154,6 @@
       <DependentUpon>201801101312339_Fix RequestMessage.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using System.IO;
+using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 namespace LendADogDemo.MVC.Controllers
 {
@@ -12,7 +14,6 @@ namespace LendADogDemo.MVC.Controllers
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
-
             return View();
         }
 
