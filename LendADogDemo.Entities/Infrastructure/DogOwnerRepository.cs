@@ -11,9 +11,9 @@ namespace LendADogDemo.Entities.Infrastructure
     {
         public DogOwnerRepository(LendADogDemoDb context) : base(context)
         {
-                
+
         }
-        
+
         public DogOwner GetByEmail(string email)
         {
             return dbSet.FirstOrDefault(x => x.Email == email);

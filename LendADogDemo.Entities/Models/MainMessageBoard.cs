@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LendADogDemo.Entities.Models
 {
-    public class MainMessageBoard
+    public class MainMessageBoard : BaseModel
     {
         [Key]
         public int MainBoardID { get; set; }
@@ -17,7 +17,6 @@ namespace LendADogDemo.Entities.Models
         [StringLength(150)]
         public string RequestMessage { get; set; }
 
-        public DateTime MessageCreated { get; set; }
 
         public bool Answered { get; set; }
 

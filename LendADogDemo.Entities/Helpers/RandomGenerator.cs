@@ -3,26 +3,45 @@ using LendADogDemo.Entities.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Migrations;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
-
+using System.Data.Entity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity;
 
 namespace LendADogDemo.Entities.Helpers
 {
-    public enum FirstOrLastName
+    internal static class RandomGenerator
     {
-        firstName = 0,
-        lastName = 1
-    }
+        private static readonly Random random;
+        private static readonly DateTime start;
 
-    public static class RandomGenerator
-    {
-        private static Random random = new Random();
-
-        public static string GetRandomFirstOrLastName(FirstOrLastName firstOrLast)
+        static RandomGenerator()
         {
-            List<string> listFullNames = new List<string>
+            random = new Random();
+            start = new DateTime(2018, 1, 1);
+        }
+
+        private static DateTime GetRandomDate()
+        {
+            DateTime randomDate = start
+                        .AddDays(random.Next(1, 32))
+                        .AddHours(random.Next(1, 25))
+                        .AddMinutes(random.Next(1, 61))
+                        .AddSeconds(random.Next(1, 61));
+            return randomDate;
+        }
+
+        internal static void RandomDogOwners(this IdentityDb context, int numberOfDogOwners, int emailLength,int phoneLength)
+        {
+            string[] EmailExtensions = new string[]
+            {
+                "@gmail.com","@yahoo.com","@outlook.com","@yandex.com","@aol.com","@zoho.com","@mail.com","@tutanota.com"
+            };
+
+            string[] listFullNames = new string[]
             {
                 "Lisette Gerhardt","Kandis Paredes","Carolee Ardis","Debbi Monti","John Chapman","Francine Rosalez",
                 "Rosette Hawkin","Josie Poff","Nadene Arnette","Quinn Sharpe","Breanna Costigan","Reinaldo Tyra",
@@ -34,56 +53,79 @@ namespace LendADogDemo.Entities.Helpers
                 "Audie Penny","Ja Keogh","Margurite Linney","Ying Eble","Tory Hennessy","Somer Breed"
             };
 
-            string randomFullName = listFullNames[random.Next(listFullNames.Count)];
-            var firstOrLastName = randomFullName.Split(null)[(int)firstOrLast];
-
-            return firstOrLastName;
-        }
-
-        public static string GetRandomPhoneNumer(int numberOfDigits)
-        {
-            char[] phoneLenght = new char[numberOfDigits];
-            phoneLenght[0] = '0';
-            phoneLenght[1] = '7';
-            for (int i = 2; i < numberOfDigits; i++)
+            string RandomEmail(int numberOfLetters)
             {
-                if (i == 2)
+                byte[] allLetters = new byte[numberOfLetters];
+
+                for (int letter = 0; letter < numberOfLetters; letter++)
                 {
-                    phoneLenght[i] = random.Next(4).ToString()[0];
-                    continue;
+                    if (letter == 0)
+                    {
+                        allLetters[letter] = (byte)random.Next(65, 91);
+                        continue;
+                    }
+                    allLetters[letter] = (byte)random.Next(97, 123);
                 }
 
-                phoneLenght[i] = random.Next(10).ToString()[0];
+                return Encoding.ASCII.GetString(allLetters) + EmailExtensions[random.Next(EmailExtensions.Length)];
             }
 
-            return new string(phoneLenght);
-        }
-
-        public static string GetRandomEmail(int numberOfLetters)
-        {
-            List<string> EmailExtensions = new List<string>()
+            string RandomPhoneNumber(int numberOfDigits)
             {
-                "@gmail.com","@yahoo.com","@outlook.com","@yandex.com","@aol.com","@zoho.com","@mail.com","@tutanota.com"
-            };
-
-            byte[] allLetters = new byte[numberOfLetters];
-
-            for (int letter = 0; letter < numberOfLetters; letter++)
-            {
-                if (letter == 0)
+                char[] phoneLenght = new char[numberOfDigits];
+                phoneLenght[0] = '0';
+                phoneLenght[1] = '7';
+                for (int i = 2; i < numberOfDigits; i++)
                 {
-                    allLetters[letter] = (byte)random.Next(65, 91);
-                    continue;
+                    if (i == 2)
+                    {
+                        phoneLenght[i] = random.Next(4).ToString()[0];
+                        continue;
+                    }
+
+                    phoneLenght[i] = random.Next(10).ToString()[0];
                 }
-                allLetters[letter] = (byte)random.Next(97, 123);
+
+                return new string(phoneLenght);
             }
 
-            return Encoding.ASCII.GetString(allLetters) + EmailExtensions[random.Next(EmailExtensions.Count)];
+            string RandomFullName()
+            {
+                return listFullNames[random.Next(listFullNames.Length)];
+            }
+
+            for (int i = 0; i < numberOfDogOwners; i++)
+            {
+                string userEmail = RandomEmail(emailLength);
+                string password = "Password*1";
+                string fullName = RandomFullName();
+
+                if (!context.Users.Any(u => u.UserName == userEmail))
+                {
+                    var store = new UserStore<ApplicationUser>(context);
+                    var menager = new UserManager<ApplicationUser>(store);
+                    var user = new ApplicationUser()
+                    {
+                        FirstName = fullName.Split(null)[0],
+                        LastName = fullName.Split(null)[1],
+                        PhoneNumber = RandomPhoneNumber(9),
+                        UserName = userEmail,
+                        Email = userEmail,
+                        IsConfirmed = random.NextDouble() > 0.5,
+                        LockoutEnabled = true
+                    };
+                    menager.Create(user, password);
+                }
+            }
         }
 
-        public static string GetRandomDogName()
+        internal static void RandomDogsPerDogOwner(this LendADogDemoDb context, int dogsPerOwner, int photosPerDog)
         {
-            List<string> dogNames = new List<string>()
+            List<DogOwner> dogOwners = context.DogOwners.ToList();
+            var currentDirName = @"C:\Users\karco\Desktop\DogPhotos";
+            var aveablePhotos = Directory.GetFiles(currentDirName);
+
+            string[] dogNames = new string[]
             {
                 "Rufus","Ella","Luke","Dixie","Kona","Nala","Penelope","Jasmine","Lola",
                 "Cisco","Maddie","Princess","Blue","Payton","Scooter","Marley","Buddy",
@@ -92,64 +134,52 @@ namespace LendADogDemo.Entities.Helpers
                 "Gigi","Tucker","Baxter","Gunner","Bruno"
             };
 
-            string dogRandomName = dogNames[random.Next(dogNames.Count)];
-
-            return dogRandomName;
-        }
-
-        public static Size GetRandomDogSize()
-        {
-            return (Size)random.Next(1, 4);
-        }
-
-        public static string GetRandomDogDescription()
-        {
-            List<string> firstWord = new List<string>()
+            string[] firstWord = new string[]
             {
                 "active","adorable","adventurous","amazing","bright","charming","cheerful",
                 "clever","delightful","energetic","intelligent","interesting","loving",
                 "playful","positive","sensitive","friendly"
             };
 
-            string description = " is " + firstWord[random.Next(firstWord.Count)] + " dog. "
-                + "Perfect guest for your home.";
+            foreach (DogOwner user in dogOwners)
+            {
+                for (int i = 0; i < dogsPerOwner; i++)
+                {
+                    Dog newDog = new Dog()
+                    {
+                        DogName = dogNames[random.Next(dogNames.Length)],
+                        DogSize = (Size)random.Next(1, 4),
+                        DogOwnerID = user.Id,
+                        Description = $" is {firstWord[random.Next(firstWord.Length)]} dog. Perfect guest for your home."
+                    };
+                    context.Dogs.Add(newDog);
+                    context.SaveChanges();
+                    var dogId = newDog.DogID;
 
-            return description;
+                    for (int b = 0; b < photosPerDog; b++)
+                    {
+                        DogPhoto newDogPhoto = new DogPhoto()
+                        {
+                            DogID = dogId,
+                            Photo = File.ReadAllBytes(aveablePhotos[random.Next(aveablePhotos.Length)])
+                        };
+                        context.DogPhotos.Add(newDogPhoto);
+                        context.SaveChanges();
+                    }
+                }
+            }
         }
 
-        public static byte[] GetRandomDogPhoto()
+        internal static void RandomRequestMessages(this LendADogDemoDb context, int numberOfRecords)
         {
-            var currentDirName = @"C:\Users\karco\Desktop\DogPhotos";
-            var aveablePhotos = Directory.GetFiles(currentDirName);
+            List<DogOwner> allOwners = context.DogOwners.ToList();
 
-            var selectetPhoto = aveablePhotos[random.Next(aveablePhotos.Length)];
-
-            //FileInfo f1 = new FileInfo("~/ImageUploads/" + dogOwnerName + dogName + ".jpg");
-            //string destFile = Path.Combine(HttpContext.Current.Server.MapPath("~/ImageUploads/"), dogOwnerName + dogName + ".jpg");
-            //File.Copy(selectetPhoto, destFile, true);
-
-            return File.ReadAllBytes(selectetPhoto);
-        }
-    }
-
-    internal class RandomRequestMessage
-    {
-        private LendADogDemoDb _context;
-
-        internal RandomRequestMessage(LendADogDemoDb context)
-        {
-            _context = context;
-        }
-
-        internal void EditMessages()
-        {
-            List<DogOwner> allOwners = _context.DogOwners.ToList();
             foreach (DogOwner sender in allOwners)
             {
-                List<DogOwner> randomOwners = _context.DogOwners
-                    .Where(o => o.Id != sender.Id)
-                    .OrderBy(x => Guid.NewGuid())
-                    .Take(5).ToList();
+                var randomOwners = context.DogOwners
+                    .SqlQuery("SELECT TOP(@numberOfRecords) * FROM AspNetUsers WHERE NOT Id = @Id ORDER BY NEWID();"
+                    , new SqlParameter("Id", sender.Id)
+                    , new SqlParameter("numberOfRecords", numberOfRecords)).ToList();
 
                 foreach (DogOwner receiver in randomOwners)
                 {
@@ -157,10 +187,78 @@ namespace LendADogDemo.Entities.Helpers
                     {
                         SendFromID = sender.Id,
                         ReceiverID = receiver.Id,
-                        Message = "Dear " + receiver.FullName + " i like to be part of LendADog community."
+                        Message = "Dear " + receiver.FullName + " i like to be part of LendADog community.",
+                        CreateDate = GetRandomDate()
                     };
-                    _context.RequestMessages.AddOrUpdate(m => m.RequestMessID, msg);
-                    _context.SaveChanges();
+                    context.RequestMessages.Add(msg);
+                    context.SaveChanges();
+                }
+            }
+        }
+
+        internal static void RandomMainBoardMessages(this LendADogDemoDb context, int messagesPerNumberOfDogs)
+        {
+            List<DogOwner> allOwners = context.DogOwners.Include(d => d.Dogs).ToList();
+            string[] numbersToLetters = { "two", "tre", "four", "five", "six", "seven", "eight", "nine" };
+
+            foreach (DogOwner sender in allOwners)
+            {
+                if (sender.Dogs != null)
+                {
+                    var randomDogs = context.Dogs
+                    .SqlQuery("SELECT TOP(@numberOfRecords) * FROM Dog ORDER BY NEWID();"
+                    , new SqlParameter("numberOfRecords", messagesPerNumberOfDogs)).ToList();
+
+                    foreach (Dog dog in randomDogs)
+                    {
+                        MainMessageBoard msg = new MainMessageBoard()
+                        {
+                            DogOwnerID = sender.Id,
+                            RequestMessage = "Need Someone to Take Care of My Dog(" + dog.DogName + ") for " + numbersToLetters[random.Next(numbersToLetters.Length)] + " days",
+                            CreateDate = GetRandomDate(),
+                            Answered = random.NextDouble() > 0.5
+                        };
+                        context.MainMessages.Add(msg);
+                        context.SaveChanges();
+                    }
+                }
+            }
+        }
+
+        internal static void RandomPrivateBoardMessages(this LendADogDemoDb context, int numberOfFriends, int messagesPerFriend)
+        {
+            List<DogOwner> dogOwners = context.DogOwners.ToList();
+
+            foreach (DogOwner sender in dogOwners)
+            {
+                var randomFriends = context.DogOwners
+                    .SqlQuery("SELECT TOP(@numberOfRecords) * FROM AspNetUsers WHERE NOT Id = @Id ORDER BY NEWID();"
+                    , new SqlParameter("Id", sender.Id)
+                    , new SqlParameter("numberOfRecords", numberOfFriends)).ToList();
+                foreach (DogOwner receiver in randomFriends)
+                {
+                    for (int i = 0; i < messagesPerFriend; i++)
+                    {
+                        PrivateMessageBoard sendMsg = new PrivateMessageBoard()
+                        {
+                            SenderID = sender.Id,
+                            ReceiverID = receiver.Id,
+                            CreateDate = GetRandomDate(),
+                            Message = "Hi " + receiver.FirstName
+                        };
+                        context.PrivateMessages.Add(sendMsg);
+
+                        PrivateMessageBoard RecMmsg = new PrivateMessageBoard()
+                        {
+                            SenderID = receiver.Id,
+                            ReceiverID = sender.Id,
+                            CreateDate = GetRandomDate(),
+                            Message = "Hi " + sender.FirstName
+                        };
+                        context.PrivateMessages.Add(RecMmsg);
+                        context.SaveChanges();
+                    }
+                    
                 }
             }
         }

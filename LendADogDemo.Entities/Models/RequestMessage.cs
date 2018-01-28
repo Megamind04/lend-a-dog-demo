@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LendADogDemo.Entities.Models
 {
-    public class RequestMessage
+    public class RequestMessage :BaseModel
     {
         [Key]
         public int RequestMessID { get; set; }

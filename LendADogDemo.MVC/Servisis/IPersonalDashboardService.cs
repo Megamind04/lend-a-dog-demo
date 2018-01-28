@@ -89,7 +89,7 @@ namespace LendADogDemo.MVC.Servisis
 
         private  List<NotConfirmedUsersRequestViewModel> GetConfirmations(string userId)
             => _reqMessRepo.GetWithDogOwnerSender(userId)
-                .Select(x => x.SendRequestMessage.IsConfirmed == true ? null : new NotConfirmedUsersRequestViewModel()
+                .Select(x => new NotConfirmedUsersRequestViewModel()
                 {
                     RequestFromID = x.SendFromID,
                     Message = x.Message,

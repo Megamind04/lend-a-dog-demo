@@ -111,6 +111,10 @@
     <Compile Include="DataContexts\LendADogMigrations\201801101312339_Fix RequestMessage.Designer.cs">
       <DependentUpon>201801101312339_Fix RequestMessage.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataContexts\LendADogMigrations\201801281605269_datetime.cs" />
+    <Compile Include="DataContexts\LendADogMigrations\201801281605269_datetime.Designer.cs">
+      <DependentUpon>201801281605269_datetime.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataContexts\LendADogMigrations\Configuration.cs" />
     <Compile Include="Helpers\RandomGenerator.cs" />
     <Compile Include="Infrastructure\DogOwnerRepository.cs" />
@@ -120,6 +124,7 @@
     <Compile Include="Infrastructure\MainMessageBoardRepository.cs" />
     <Compile Include="Infrastructure\PrivateMessageBoardRepository.cs" />
     <Compile Include="Infrastructure\RequestMessageRepository.cs" />
+    <Compile Include="Models\BaseModel.cs" />
     <Compile Include="UoW\UnitOfWork.cs" />
     <Compile Include="Interfaces\IDogOwnerRepository.cs" />
     <Compile Include="Interfaces\IDogPhotoRepository.cs" />
@@ -152,6 +157,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\LendADogMigrations\201801101312339_Fix RequestMessage.resx">
       <DependentUpon>201801101312339_Fix RequestMessage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\LendADogMigrations\201801281605269_datetime.resx">
+      <DependentUpon>201801281605269_datetime.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

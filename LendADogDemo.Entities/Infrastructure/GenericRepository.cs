@@ -9,10 +9,10 @@ using System.Linq.Expressions;
 
 namespace LendADogDemo.Entities.Infrastructure
 {
-    public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : class
+    public abstract class GenericRepository<TEntity> where TEntity : class
     {
-        internal LendADogDemoDb context;
-        internal DbSet<TEntity> dbSet;
+        private readonly LendADogDemoDb context;
+        protected readonly DbSet<TEntity> dbSet;
 
         public GenericRepository(LendADogDemoDb context)
         {

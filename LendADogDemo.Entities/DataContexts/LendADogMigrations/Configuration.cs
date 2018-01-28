@@ -23,44 +23,29 @@ namespace LendADogDemo.Entities.DataContexts.LendADogMigrations
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data.
 
-            //var korisnici = context.DogOwners.ToList();
-            //foreach (var item in korisnici)
+            //if (System.Diagnostics.Debugger.IsAttached == false)
             //{
-            //    var doggys = new List<Dog>();
-            //    for (int d = 1; d <= 5; d++)
-            //    {
-            //        string dogyname = RandomGenerator.GetRandomDogName();
-            //        doggys.Add(new Dog()
-            //        {
-            //            DogOwnerID = item.Id,
-            //            DogName = dogyname,
-            //            DogSize = RandomGenerator.GetRandomDogSize(),
-            //            Description = dogyname + RandomGenerator.GetRandomDogDescription()
-            //        });
-            //    }
-            //    doggys.ForEach(x => context.Dogs.AddOrUpdate(c => c.DogID, x));
-            //    context.SaveChanges();
+            //    System.Diagnostics.Debugger.Launch();
             //}
 
-            //var owners = context.DogOwners.ToList();
-            //foreach (var owner in owners)
-            //{
-            //    var dofOfOwner = context.Dogs.Where(us => us.DogOwnerID == owner.Id).ToList();
-
-            //    foreach (var dog in dofOfOwner)
-            //    {
-            //        context.DogPhotos.AddOrUpdate(c => c.DogPhotoID, new DogPhoto
-            //        {
-            //            DogID = dog.DogID,
-            //            Photo = RandomGenerator.GetRandomDogPhoto()
-            //        });
-            //        context.SaveChanges();
-            //    }
-            //}
-            if (context.RequestMessages.Count() < 1)
+            if (!context.Dogs.Any())
             {
-                RandomRequestMessage bla = new RandomRequestMessage(context);
-                bla.EditMessages();
+                context.RandomDogsPerDogOwner(3, 3);
+            }
+
+            if (!context.RequestMessages.Any())
+            {
+                context.RandomRequestMessages(3);
+            }
+
+            if (!context.MainMessages.Any())
+            {
+                context.RandomMainBoardMessages(2);
+            }
+
+            if (!context.PrivateMessages.Any())
+            {
+                context.RandomPrivateBoardMessages(5, 3);
             }
 
         }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LendADogDemo.Entities.Models
 {
-    public class PrivateMessageBoard
+    public class PrivateMessageBoard :BaseModel
     {
         [Key]
         public int PrivateMessID { get; set; }

@@ -17,7 +17,10 @@ namespace LendADogDemo.Entities.Infrastructure
 
         public IEnumerable<RequestMessage> GetWithDogOwnerSender(string dogOwnerId)
         {
-            return dbSet.Where(x => x.ReceiverID == dogOwnerId).Include(u => u.SendRequestMessage);
+            return dbSet
+                .Where(x => x.ReceiverID == dogOwnerId)
+                .Include(u => u.SendRequestMessage)
+                .Where(f => f.SendRequestMessage.IsConfirmed == false);
         }
     }
 }

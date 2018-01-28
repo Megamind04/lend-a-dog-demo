@@ -12,7 +12,7 @@ namespace LendADogDemo.Entities.Infrastructure
     {
         public DogRepository(LendADogDemoDb context) : base(context)
         {
-
+            
         }
         
         public IEnumerable<Dog> GetDogWithPhotos(string dogOwnerId)

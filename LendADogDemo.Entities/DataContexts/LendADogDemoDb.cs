@@ -1,4 +1,5 @@
 ﻿using LendADogDemo.Entities.Models;
+using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions;
@@ -29,6 +30,9 @@ namespace LendADogDemo.Entities.DataContexts
 
             // IMPORTANT: we are mapping the entity User to the same table as the entity ApplicationUser
             modelBuilder.Entity<DogOwner>().ToTable("AspNetUsers");
+
+            modelBuilder.Properties<DateTime>()
+                .Configure(x => x.HasColumnType("datetime2").HasPrecision(0));
         }
 
         public DbQuery<T> Query<T>() where T : class
