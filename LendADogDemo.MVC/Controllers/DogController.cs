@@ -53,7 +53,5 @@ namespace LendADogDemo.MVC.Controllers
                 return View(dogToBeCreated);
             }
         }
-
-        
     }
 }

@@ -5,6 +5,6 @@ namespace LendADogDemo.Entities.Interfaces
 {
     public interface IRequestMessageRepository : IRepository<RequestMessage>
     {
-        IEnumerable<RequestMessage> GetWithDogOwnerSender(string dogOwnerId);
+        IEnumerable<RequestMessage> GetUnconfirmedRequests(string userID);
     }
 }

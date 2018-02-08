@@ -8,6 +8,8 @@ namespace LendADogDemo.Entities.DataContexts
         public IdentityDb()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
+            Configuration.LazyLoadingEnabled = false;
+            Configuration.ProxyCreationEnabled = false;
         }
 
         public static IdentityDb Create()

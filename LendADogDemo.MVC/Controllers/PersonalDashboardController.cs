@@ -12,16 +12,21 @@ namespace LendADogDemo.MVC.Controllers
 {
     public class PersonalDashboardController : Controller
     {
-        private IPersonalDashboardService _personalDashboardService;
+
+        #region Initialize
+
+        private readonly IPersonalDashboardService personalDashboardService;
 
         public PersonalDashboardController()
         {
-                
+
         }
-        public PersonalDashboardController(IPersonalDashboardService personalDashboardService)
+        public PersonalDashboardController(IPersonalDashboardService _personalDashboardService)
         {
-            _personalDashboardService = personalDashboardService;
+            personalDashboardService = _personalDashboardService;
         }
+
+        #endregion
 
         [Authorize]
         [HttpGet]
@@ -32,17 +37,45 @@ namespace LendADogDemo.MVC.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            PersonalDashboardViewModel personalDashboard = _personalDashboardService.GetMyPersonalDashboardModel(userId);
+            PersonalDashboardViewModel personalDashboard = personalDashboardService.GetMyPersonalDashboardModel(userId);
             return View(personalDashboard);
         }
 
         public ActionResult ShowPhoto(int dogId)
         {
-            var imageToDisplay = _personalDashboardService.GetLastImage(dogId);
+            var imageToDisplay = personalDashboardService.GetLastImage(dogId);
 
-            return imageToDisplay != null 
-                ? File(imageToDisplay, "image/jpeg") 
+            return imageToDisplay != null
+                ? File(imageToDisplay, "image/jpeg")
                 : null;
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public ActionResult AnswerToRequest(PrivateMessageBoardViewModel dataToPost)
+        {
+            string userId = User.Identity.GetUserId();
+
+            if (!ModelState.IsValid)
+            {
+                return Json(data: new
+                {
+                    success = false,
+                    errors = ModelState.Values
+                });
+            }
+            else
+            {
+                if (personalDashboardService.CreatePrivetMessage(dataToPost, userId))
+                {
+                    return Json(data: true);
+                }
+                else
+                {
+                    return Json(data: false);
+                }
+            }
         }
     }
 }

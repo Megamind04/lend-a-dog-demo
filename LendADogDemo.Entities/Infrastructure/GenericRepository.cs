@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using LendADogDemo.Entities.DataContexts;
-using LendADogDemo.Entities.Models;
-using LendADogDemo.Entities.Interfaces;
 using System.Data.Entity;
 using System.Linq.Expressions;
+using LendADogDemo.Entities.UoW;
 
 namespace LendADogDemo.Entities.Infrastructure
 {
@@ -13,10 +12,12 @@ namespace LendADogDemo.Entities.Infrastructure
     {
         private readonly LendADogDemoDb context;
         protected readonly DbSet<TEntity> dbSet;
+        private readonly IUnitOfWork unitOfWork;
 
-        public GenericRepository(LendADogDemoDb context)
+        public GenericRepository(IUnitOfWork _unitOfWork)
         {
-            this.context = context;
+            this.unitOfWork = _unitOfWork;
+            context = _unitOfWork.Context;
             dbSet = context.Set<TEntity>();
         }
 

@@ -10,7 +10,10 @@ namespace LendADogDemo.Entities.Models
         public int MainBoardID { get; set; }
 
         [Required]
-        [ForeignKey("DogOwner")]
+        public int DogID { get; set; }
+
+        [Required]
+        [ForeignKey("RequestSender")]
         public string DogOwnerID { get; set; }
 
         [Required]
@@ -21,7 +24,8 @@ namespace LendADogDemo.Entities.Models
         public bool Answered { get; set; }
 
 
+        public virtual Dog Dog { get; set; }
 
-        public virtual DogOwner DogOwner { get; set; }
+        public virtual DogOwner RequestSender { get; set; }
     }
 }

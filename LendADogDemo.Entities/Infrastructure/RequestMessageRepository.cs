@@ -1,26 +1,27 @@
 ﻿using LendADogDemo.Entities.Interfaces;
 using LendADogDemo.Entities.Models;
-using LendADogDemo.Entities.DataContexts;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
 using System.Data.Entity;
+using LendADogDemo.Entities.UoW;
 
 namespace LendADogDemo.Entities.Infrastructure
 {
     public class RequestMessageRepository : GenericRepository<RequestMessage>,IRequestMessageRepository
     {
-        public RequestMessageRepository(LendADogDemoDb context) : base(context)
+        public RequestMessageRepository(IUnitOfWork _unitOfWork) : base(_unitOfWork)
         {
 
         }
 
-        public IEnumerable<RequestMessage> GetWithDogOwnerSender(string dogOwnerId)
+        public IEnumerable<RequestMessage> GetUnconfirmedRequests(string userID)
         {
             return dbSet
-                .Where(x => x.ReceiverID == dogOwnerId)
-                .Include(u => u.SendRequestMessage)
-                .Where(f => f.SendRequestMessage.IsConfirmed == false);
+                .Where(x => x.ReciverID == userID)
+                .Include(x => x.SenderOfRequest)
+                .Where(x=>x.SenderOfRequest.IsConfirmed == false)
+                .AsNoTracking();
         }
     }
 }

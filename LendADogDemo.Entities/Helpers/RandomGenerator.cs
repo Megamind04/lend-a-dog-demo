@@ -8,13 +8,16 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Data.Entity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity;
+using System.Transactions;
+using System.Drawing;
 
 namespace LendADogDemo.Entities.Helpers
 {
     internal static class RandomGenerator
     {
+        #region Initialize
+
         private static readonly Random random;
         private static readonly DateTime start;
 
@@ -34,8 +37,12 @@ namespace LendADogDemo.Entities.Helpers
             return randomDate;
         }
 
-        internal static void RandomDogOwners(this IdentityDb context, int numberOfDogOwners, int emailLength,int phoneLength)
+        #endregion
+
+        internal static void RandomDogOwners(this IdentityDb context, int numberOfDogOwners, int emailLength, int phoneLength)
         {
+            #region Helpers
+
             string[] EmailExtensions = new string[]
             {
                 "@gmail.com","@yahoo.com","@outlook.com","@yandex.com","@aol.com","@zoho.com","@mail.com","@tutanota.com"
@@ -94,36 +101,65 @@ namespace LendADogDemo.Entities.Helpers
                 return listFullNames[random.Next(listFullNames.Length)];
             }
 
-            for (int i = 0; i < numberOfDogOwners; i++)
-            {
-                string userEmail = RandomEmail(emailLength);
-                string password = "Password*1";
-                string fullName = RandomFullName();
+            #endregion
 
-                if (!context.Users.Any(u => u.UserName == userEmail))
+            using (TransactionScope scope = new TransactionScope())
+            {
+                using (context = new IdentityDb())
                 {
-                    var store = new UserStore<ApplicationUser>(context);
-                    var menager = new UserManager<ApplicationUser>(store);
-                    var user = new ApplicationUser()
+                    var haser = new PasswordHasher();
+                    for (int i = 0; i < numberOfDogOwners; i++)
                     {
-                        FirstName = fullName.Split(null)[0],
-                        LastName = fullName.Split(null)[1],
-                        PhoneNumber = RandomPhoneNumber(9),
-                        UserName = userEmail,
-                        Email = userEmail,
-                        IsConfirmed = random.NextDouble() > 0.5,
-                        LockoutEnabled = true
-                    };
-                    menager.Create(user, password);
+                        string userEmail = RandomEmail(emailLength);
+                        string password = "Password*1";
+                        string fullName = RandomFullName();
+
+                        var user = new ApplicationUser()
+                        {
+                            FirstName = fullName.Split(null)[0],
+                            LastName = fullName.Split(null)[1],
+                            PhoneNumber = RandomPhoneNumber(9),
+                            UserName = userEmail,
+                            Email = userEmail,
+                            IsConfirmed = random.NextDouble() > 0.5,
+                            LockoutEnabled = true,
+                            PasswordHash = haser.HashPassword(password)
+                        };
+
+                        context.Users.Add(user);
+
+                        if (i % 100 == 0)
+                        {
+                            context.SaveChanges();
+                            context.Dispose();
+                            context = new IdentityDb();
+                        }
+                    }
+                    context.SaveChanges();
                 }
+                scope.Complete();
             }
         }
 
         internal static void RandomDogsPerDogOwner(this LendADogDemoDb context, int dogsPerOwner, int photosPerDog)
         {
+            #region Helpers
             List<DogOwner> dogOwners = context.DogOwners.ToList();
+
             var currentDirName = @"C:\Users\karco\Desktop\DogPhotos";
+
             var aveablePhotos = Directory.GetFiles(currentDirName);
+
+            byte[][] bla = new byte[aveablePhotos.Length][];
+
+            for (int i = 0; i < aveablePhotos.Length; i++)
+            {
+                using (Image img = Image.FromFile(aveablePhotos[i]))
+                {
+                    img.Resize(760, 540);
+                    bla[i] = img.ImageToByteArray();
+                }
+            }
 
             string[] dogNames = new string[]
             {
@@ -141,32 +177,50 @@ namespace LendADogDemo.Entities.Helpers
                 "playful","positive","sensitive","friendly"
             };
 
-            foreach (DogOwner user in dogOwners)
-            {
-                for (int i = 0; i < dogsPerOwner; i++)
-                {
-                    Dog newDog = new Dog()
-                    {
-                        DogName = dogNames[random.Next(dogNames.Length)],
-                        DogSize = (Size)random.Next(1, 4),
-                        DogOwnerID = user.Id,
-                        Description = $" is {firstWord[random.Next(firstWord.Length)]} dog. Perfect guest for your home."
-                    };
-                    context.Dogs.Add(newDog);
-                    context.SaveChanges();
-                    var dogId = newDog.DogID;
+            #endregion
 
-                    for (int b = 0; b < photosPerDog; b++)
+            using (TransactionScope scope = new TransactionScope())
+            {
+                using (context = new LendADogDemoDb())
+                {
+                    int a = 0;
+                    foreach (DogOwner user in dogOwners)
                     {
-                        DogPhoto newDogPhoto = new DogPhoto()
+                        a++;
+                        for (int i = 0; i < dogsPerOwner; i++)
                         {
-                            DogID = dogId,
-                            Photo = File.ReadAllBytes(aveablePhotos[random.Next(aveablePhotos.Length)])
-                        };
-                        context.DogPhotos.Add(newDogPhoto);
-                        context.SaveChanges();
+                            Dog newDog = new Dog()
+                            {
+                                DogName = dogNames[random.Next(dogNames.Length)],
+                                DogSize = (Size)random.Next(1, 4),
+                                DogOwnerID = user.Id,
+                                Description = $" is {firstWord[random.Next(firstWord.Length)]} dog. Perfect guest for your home.",
+                                DogPhotos = new List<DogPhoto>()
+                            };
+
+                            for (int b = 0; b < photosPerDog; b++)
+                            {
+                                DogPhoto newDogPhoto = new DogPhoto()
+                                {
+                                    DogID = newDog.DogID,
+                                    //Photo = File.ReadAllBytes(aveablePhotos[random.Next(aveablePhotos.Length)])
+                                    Photo = bla[random.Next(bla.Length)]
+                                };
+                                newDog.DogPhotos.Add(newDogPhoto);
+                            }
+
+                            context.Dogs.Add(newDog);
+                        }
+                        if (a % 10 == 0)
+                        {
+                            context.SaveChanges();
+                            context.Dispose();
+                            context = new LendADogDemoDb();
+                        }
                     }
+                    context.SaveChanges();
                 }
+                scope.Complete();
             }
         }
 
@@ -174,93 +228,145 @@ namespace LendADogDemo.Entities.Helpers
         {
             List<DogOwner> allOwners = context.DogOwners.ToList();
 
-            foreach (DogOwner sender in allOwners)
+            using (TransactionScope scope = new TransactionScope())
             {
-                var randomOwners = context.DogOwners
-                    .SqlQuery("SELECT TOP(@numberOfRecords) * FROM AspNetUsers WHERE NOT Id = @Id ORDER BY NEWID();"
-                    , new SqlParameter("Id", sender.Id)
-                    , new SqlParameter("numberOfRecords", numberOfRecords)).ToList();
-
-                foreach (DogOwner receiver in randomOwners)
+                using (context = new LendADogDemoDb())
                 {
-                    RequestMessage msg = new RequestMessage()
+                    int a = 0;
+                    foreach (DogOwner sender in allOwners)
                     {
-                        SendFromID = sender.Id,
-                        ReceiverID = receiver.Id,
-                        Message = "Dear " + receiver.FullName + " i like to be part of LendADog community.",
-                        CreateDate = GetRandomDate()
-                    };
-                    context.RequestMessages.Add(msg);
+                        a++;
+                        var randomOwners = context.DogOwners
+                            .SqlQuery("SELECT TOP(@numberOfRecords) * FROM AspNetUsers WHERE NOT Id = @Id ORDER BY NEWID();"
+                            , new SqlParameter("Id", sender.Id)
+                            , new SqlParameter("numberOfRecords", numberOfRecords)).ToList();
+
+                        foreach (DogOwner receiver in randomOwners)
+                        {
+                            RequestMessage msg = new RequestMessage()
+                            {
+                                SendFromID = sender.Id,
+                                ReciverID = receiver.Id,
+                                Message = "Dear " + receiver.FullName + " i like to be part of LendADog community.",
+                                CreateDate = GetRandomDate()
+                            };
+                            context.RequestMessages.Add(msg);
+                        }
+                        if (a % 10 == 0)
+                        {
+                            context.SaveChanges();
+                            context.Dispose();
+                            context = new LendADogDemoDb();
+                        }
+                    }
                     context.SaveChanges();
                 }
+                scope.Complete();
             }
         }
 
         internal static void RandomMainBoardMessages(this LendADogDemoDb context, int messagesPerNumberOfDogs)
         {
+            #region Helpers
+
             List<DogOwner> allOwners = context.DogOwners.Include(d => d.Dogs).ToList();
+
             string[] numbersToLetters = { "two", "tre", "four", "five", "six", "seven", "eight", "nine" };
 
-            foreach (DogOwner sender in allOwners)
-            {
-                if (sender.Dogs != null)
-                {
-                    var randomDogs = context.Dogs
-                    .SqlQuery("SELECT TOP(@numberOfRecords) * FROM Dog ORDER BY NEWID();"
-                    , new SqlParameter("numberOfRecords", messagesPerNumberOfDogs)).ToList();
+            #endregion
 
-                    foreach (Dog dog in randomDogs)
+            using (TransactionScope scope = new TransactionScope())
+            {
+                using (context = new LendADogDemoDb())
+                {
+                    int a = 0;
+                    foreach (DogOwner sender in allOwners)
                     {
-                        MainMessageBoard msg = new MainMessageBoard()
+                        if (sender.Dogs != null)
                         {
-                            DogOwnerID = sender.Id,
-                            RequestMessage = "Need Someone to Take Care of My Dog(" + dog.DogName + ") for " + numbersToLetters[random.Next(numbersToLetters.Length)] + " days",
-                            CreateDate = GetRandomDate(),
-                            Answered = random.NextDouble() > 0.5
-                        };
-                        context.MainMessages.Add(msg);
-                        context.SaveChanges();
+                            var randomDogs = context.Dogs
+                            .SqlQuery("SELECT TOP(@numberOfRecords) * FROM Dog ORDER BY NEWID();"
+                            , new SqlParameter("numberOfRecords", messagesPerNumberOfDogs)).ToList();
+
+                            foreach (Dog dog in randomDogs)
+                            {
+                                MainMessageBoard msg = new MainMessageBoard()
+                                {
+                                    DogOwnerID = sender.Id,
+                                    RequestMessage = "Need Someone to Take Care of My Dog(" + dog.DogName + ") for " + numbersToLetters[random.Next(numbersToLetters.Length)] + " days",
+                                    CreateDate = GetRandomDate(),
+                                    Answered = random.NextDouble() > 0.5,
+                                    DogID = dog.DogID,
+                                };
+                                context.MainMessages.Add(msg);
+                            }
+                        }
+                        if (a % 10 == 0)
+                        {
+                            context.SaveChanges();
+                            context.Dispose();
+                            context = new LendADogDemoDb();
+                        }
                     }
+                    context.SaveChanges();
                 }
+                scope.Complete();
             }
+
         }
 
         internal static void RandomPrivateBoardMessages(this LendADogDemoDb context, int numberOfFriends, int messagesPerFriend)
         {
             List<DogOwner> dogOwners = context.DogOwners.ToList();
 
-            foreach (DogOwner sender in dogOwners)
+            using (TransactionScope scope = new TransactionScope())
             {
-                var randomFriends = context.DogOwners
-                    .SqlQuery("SELECT TOP(@numberOfRecords) * FROM AspNetUsers WHERE NOT Id = @Id ORDER BY NEWID();"
-                    , new SqlParameter("Id", sender.Id)
-                    , new SqlParameter("numberOfRecords", numberOfFriends)).ToList();
-                foreach (DogOwner receiver in randomFriends)
+                using (context = new LendADogDemoDb())
                 {
-                    for (int i = 0; i < messagesPerFriend; i++)
+                    int a = 0;
+                    foreach (DogOwner sender in dogOwners)
                     {
-                        PrivateMessageBoard sendMsg = new PrivateMessageBoard()
-                        {
-                            SenderID = sender.Id,
-                            ReceiverID = receiver.Id,
-                            CreateDate = GetRandomDate(),
-                            Message = "Hi " + receiver.FirstName
-                        };
-                        context.PrivateMessages.Add(sendMsg);
+                        a++;
+                        var randomFriends = context.DogOwners
+                            .SqlQuery("SELECT TOP(@numberOfRecords) * FROM AspNetUsers WHERE NOT Id = @Id ORDER BY NEWID();"
+                            , new SqlParameter("Id", sender.Id)
+                            , new SqlParameter("numberOfRecords", numberOfFriends)).ToList();
 
-                        PrivateMessageBoard RecMmsg = new PrivateMessageBoard()
+                        foreach (DogOwner receiver in randomFriends)
                         {
-                            SenderID = receiver.Id,
-                            ReceiverID = sender.Id,
-                            CreateDate = GetRandomDate(),
-                            Message = "Hi " + sender.FirstName
-                        };
-                        context.PrivateMessages.Add(RecMmsg);
-                        context.SaveChanges();
+                            for (int i = 0; i < messagesPerFriend; i++)
+                            {
+                                PrivateMessageBoard sendMsg = new PrivateMessageBoard()
+                                {
+                                    SendFromID = sender.Id,
+                                    RrecivedFromID = receiver.Id,
+                                    CreateDate = GetRandomDate(),
+                                    Message = "Hi " + receiver.FirstName
+                                };
+                                context.PrivateMessages.Add(sendMsg);
+
+                                PrivateMessageBoard RecMmsg = new PrivateMessageBoard()
+                                {
+                                    SendFromID = receiver.Id,
+                                    RrecivedFromID = sender.Id,
+                                    CreateDate = GetRandomDate(),
+                                    Message = "Hi " + sender.FirstName
+                                };
+                                context.PrivateMessages.Add(RecMmsg);
+                            }
+                        }
+                        if (a % 10 == 0)
+                        {
+                            context.SaveChanges();
+                            context.Dispose();
+                            context = new LendADogDemoDb();
+                        }
                     }
-                    
+                    context.SaveChanges();
                 }
+                scope.Complete();
             }
+
         }
     }
 }

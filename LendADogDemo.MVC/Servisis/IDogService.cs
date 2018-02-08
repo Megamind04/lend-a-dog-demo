@@ -19,9 +19,6 @@ namespace LendADogDemo.MVC.Servisis
         bool CreateDog(DogViewModel dogToBeCreated, string userId, HttpPostedFileBase photo);
     }
 
-
-
-
     public class DogService : IDogService
     {
         private IUnitOfWork _unitOfWork;
@@ -29,11 +26,11 @@ namespace LendADogDemo.MVC.Servisis
         private IDogRepository _dogRepo;
         private IDogPhotoRepository _dogPhotoRepo;
 
-        public DogService(IUnitOfWork unitOfWork)
+        public DogService(IUnitOfWork unitOfWork, IDogRepository dogRepo, IDogPhotoRepository dogPhotoRepo)
         {
             _unitOfWork = unitOfWork;
-            _dogRepo = _unitOfWork.DogRepo;
-            _dogPhotoRepo = _unitOfWork.DogPhotoRepo;
+            _dogRepo = dogRepo;
+            _dogPhotoRepo = dogPhotoRepo;
         }
 
         public bool CreateDog(DogViewModel dogToBeCreated, string userId, HttpPostedFileBase uploadPhoto)
@@ -48,7 +45,7 @@ namespace LendADogDemo.MVC.Servisis
             try
             {
                 _dogRepo.Insert(newDog);
-                _unitOfWork.Save();
+                _unitOfWork.Commit();
 
                 DogPhoto newDogPhoto = new DogPhoto()
                 {
@@ -57,7 +54,7 @@ namespace LendADogDemo.MVC.Servisis
                 };
 
                 _dogPhotoRepo.Insert(newDogPhoto);
-                _unitOfWork.Save();
+                _unitOfWork.Commit();
 
                 return true;
             }
@@ -86,6 +83,9 @@ namespace LendADogDemo.MVC.Servisis
             }
 
             return newPhoto;
+
         }
+
+
     }
 }

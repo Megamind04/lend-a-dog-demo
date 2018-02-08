@@ -9,46 +9,88 @@ using LendADogDemo.Entities.Models;
 using System.Drawing;
 using System.IO;
 using Ninject;
+using System.Diagnostics;
+using System.Data.Entity.Core;
 
 namespace LendADogDemo.MVC.Servisis
 {
-    public interface IPersonalDashboardService
+    public interface IPersonalDashboardService 
     {
         PersonalDashboardViewModel GetMyPersonalDashboardModel(string userId);
+
         byte[] GetLastImage(int dogId);
+
+        bool CreatePrivetMessage(PrivateMessageBoardViewModel newPrivetMess, string SenderID);
     }
-
-
-
 
     public class PersonalDashboardService : IPersonalDashboardService
     {
-        private IUnitOfWork _unitOfWork;
-        private IPrivateMessageBoardRepository _privaMessRepo;
-        private IDogRepository _dogRepo;
-        private IDogPhotoRepository _dogPhotoRepo;
-        private IRequestMessageRepository _reqMessRepo;
-        private IDogOwnerRepository _dogOwnerRepo;
 
+        #region Initialize
 
-        public PersonalDashboardService(IUnitOfWork unitOfWork)
+        private readonly IUnitOfWork unitOfWork;
+        private readonly IDogRepository dogRepo;
+        private readonly IPrivateMessageBoardRepository privateMessageBoardRepo;
+        private readonly IRequestMessageRepository requestMessageRepo;
+        private readonly IDogPhotoRepository dogPhotoRepo;
+
+        public PersonalDashboardService(IUnitOfWork _unitOfWork, IDogRepository _dogRepo, IPrivateMessageBoardRepository _privateMessageBoardRepo, IRequestMessageRepository _requestMessageRepo, IDogPhotoRepository _dogPhotoRepo)
         {
-            _unitOfWork = unitOfWork;
-            _privaMessRepo = _unitOfWork.PrivateMessRepo;
-            _dogRepo = _unitOfWork.DogRepo;
-            _dogPhotoRepo = _unitOfWork.DogPhotoRepo;
-            _reqMessRepo = _unitOfWork.RequestMessRepo;
-            _dogOwnerRepo = _unitOfWork.DogOwnerRepo;
+            unitOfWork = _unitOfWork;
+            dogRepo = _dogRepo;
+            privateMessageBoardRepo = _privateMessageBoardRepo;
+            requestMessageRepo = _requestMessageRepo;
+            dogPhotoRepo = _dogPhotoRepo;
         }
 
+        #endregion
 
         public PersonalDashboardViewModel GetMyPersonalDashboardModel(string userId)
         {
+
+            #region Geting Information for personalDashboardViewModel
+            IEnumerable<DogViewModel> DogsToDisplay()
+            {
+                return dogRepo.GetDogWithPhotos(userId).Select(x => new DogViewModel()
+                {
+                    DogID = x.DogID,
+                    DogOwnerID = x.DogOwnerID,
+                    DogName = x.DogName,
+                    DogSize = x.DogSize,
+                    Description = x.Description,
+                });
+            }
+
+            IEnumerable<ConversationViewModel> Conversations()
+            {
+                return privateMessageBoardRepo.GetByDogOwnerId(userId)
+                           .GroupBy(x => x, new ConversationComparer())
+                           .Select(g => g.Last())
+                           .Select(m => new ConversationViewModel()
+                           {
+                               LastMessage = m.Message,
+                               OtherFullName = m.SendFromID == userId ? m.ReceiverOfPrivateMessage.FullName : m.SenderOfPrivateMessage.FullName,
+                               OtherID = m.SendFromID == userId ? m.RrecivedFromID : m.SendFromID
+                           }).ToList();
+            }
+
+            IEnumerable<NotConfirmedUsersRequestViewModel> Confirmations()
+            {
+                return requestMessageRepo.GetUnconfirmedRequests(userId)
+                           .Select(x => new NotConfirmedUsersRequestViewModel()
+                           {
+                               RequestFromID = x.SendFromID,
+                               Message = x.Message,
+                               RequestFromFullName = x.SenderOfRequest.FullName
+                           }).ToList();
+            }
+            #endregion
+
             PersonalDashboardViewModel personalDashboardViewModel = new PersonalDashboardViewModel()
             {
-                NotConfirmedUsersRequests = GetConfirmations(userId),
-                Conversations = GetConversations(userId),
-                Dogs = GetDogsToDisplay(userId)
+                Dogs = DogsToDisplay(),
+                Conversations = Conversations(),
+                NotConfirmedUsersRequests = Confirmations()
             };
 
             return personalDashboardViewModel;
@@ -56,66 +98,44 @@ namespace LendADogDemo.MVC.Servisis
 
         public byte[] GetLastImage(int dogId)
         {
-            return _dogPhotoRepo.Get(filter: x => x.DogID == dogId).LastOrDefault().Photo;
+            return dogPhotoRepo.Get(filter: x => x.DogID == dogId).LastOrDefault().Photo;
         }
 
-        private List<DogViewModel> GetDogsToDisplay(string userId)
-            => _dogRepo.GetDogWithPhotos(userId).Select(x => new DogViewModel()
-            {
-                DogID = x.DogID,
-                DogOwnerID = x.DogOwnerID,
-                DogName = x.DogName,
-                DogSize = x.DogSize,
-                Description = x.Description,
-                //Photo = x.DogPhotos.Select(p => new DogPhotoViewModel()
-                //{
-                //    DogID = p.DogID,
-                //    DogPhoto = p.Photo == null || p.Photo.Length == 0 ? string.Empty : Convert.ToBase64String(p.Photo)
-                //}).LastOrDefault()
-            }).ToList();
-
-        private List<ConversationViewModel> GetConversations(string userId)
+        public bool CreatePrivetMessage(PrivateMessageBoardViewModel newPrivetMess,string SenderID)
         {
-            return _privaMessRepo.GetByDogOwnerId(userId)
-                           .GroupBy(x => x, new ConversationComparer())
-                           .Select(g => g.Last())
-                           .Select(m => new ConversationViewModel()
-                           {
-                               LastMessage = m.Message,
-                               OtherFullName = m.SenderID == userId ? m.ReceiverDogOwner.FullName : m.SenderDogOwner.FullName,
-                               OtherID = m.SenderID == userId ? m.ReceiverID : m.SenderID
-                           }).ToList();
+            PrivateMessageBoard messageToInser = new PrivateMessageBoard()
+            {
+                CreateDate = DateTime.Now,
+                Message = newPrivetMess.Message,
+                SendFromID = SenderID,
+                RrecivedFromID = newPrivetMess.RrecivedFromID
+            };
+            try
+            {
+                privateMessageBoardRepo.Insert(messageToInser);
+                unitOfWork.Commit();
+                return true;
+            }
+            catch(EntityException ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return false;
+            }
         }
 
-        private  List<NotConfirmedUsersRequestViewModel> GetConfirmations(string userId)
-            => _reqMessRepo.GetWithDogOwnerSender(userId)
-                .Select(x => new NotConfirmedUsersRequestViewModel()
-                {
-                    RequestFromID = x.SendFromID,
-                    Message = x.Message,
-                    RequestFromFullName = x.SendRequestMessage.FullName
-                }).ToList();
-
-
-        //public static Image ByteArrayToImage(byte[] byteArrayIn)
-        //{
-        //    MemoryStream ms = new MemoryStream(byteArrayIn);
-        //    Image returnImage = Image.FromStream(ms);
-        //    return returnImage;
-        //}
     }
 
     class ConversationComparer : IEqualityComparer<PrivateMessageBoard>
     {
         public bool Equals(PrivateMessageBoard x, PrivateMessageBoard y)
         {
-            return (x.SenderID == y.ReceiverID && x.ReceiverID == y.SenderID) ||
-                (x.SenderID == y.SenderID && x.ReceiverID == y.ReceiverID);
+            return (x.SendFromID == y.RrecivedFromID && x.RrecivedFromID == y.SendFromID) ||
+                (x.SendFromID == y.SendFromID && x.RrecivedFromID == y.RrecivedFromID);
         }
 
         public int GetHashCode(PrivateMessageBoard obj)
         {
-            return obj.SenderID.GetHashCode() ^ obj.ReceiverID.GetHashCode();
+            return obj.SendFromID.GetHashCode() ^ obj.RrecivedFromID.GetHashCode();
         }
     }
 }

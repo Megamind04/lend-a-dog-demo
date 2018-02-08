@@ -19,11 +19,6 @@ namespace LendADogDemo.Entities.DataContexts.IdentityMigrations
 
         protected override void Seed(LendADogDemo.Entities.DataContexts.IdentityDb context)
         {
-            //  This method will be called after migrating to the latest version.
-
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data.
-
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
 

@@ -1,0 +1,153 @@
+﻿@model LendADogDemo.MVC.ViewModels.MainDashboardViewModel
+@{
+    ViewBag.Title = "MainDashboard";
+}
+
+
+
+<section class="clearfix container intro-text left-0 text-center bg-faded p-5 rounded">
+    @foreach (var item in Model.MainMessages)
+    {
+        <div class="card" style="padding:20px;margin:20px">
+            <h3 class="card-header" style="background-color:burlywood">From : @item.RequestSenderFullName</h3>
+            <br />
+            <div class="card-block row">
+                <div class="col-md-4">
+                    <img src="@Url.Action("ShowPhoto","PersonalDashboard",routeValues: new { dogId = item.DogID})" class="card-img-bottom" style="max-height:260px;max-width:260px" />
+                </div>
+
+                <div class="col-md-8">
+                    <h4 class="card-title">@item.RequestMessage</h4>
+                    <p class="card-text"><strong>@item.DogName</strong> @item.Description</p>
+                    <p class="card-text">My Phone @item.RequestSenderPhoneNumber</p>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
+                            data-whatever1="@item.RequestSenderFullName" data-whatever2="@item.RequestSender">
+                        Answer
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</section>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" id="myForm">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    @Html.Hidden("RrecivedFromID", "Value", htmlAttributes: new { @class = "hiddenID" })
+                    <div class="form-group">
+                        <label for="recipient-name" class="form-control-label">
+                            Recipient: <strong class="appendString" id="recipient-name"></strong>
+                        </label>
+                    </div>
+
+                    <div class="form-group" id="dynamicDiv">
+                        <label for="message-text" class="form-control-label">Message:</label>
+                        <textarea class="form-control" id="message-text" name="Message"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <p id="valError" class="form-control-label" style="color:red">Message is required</p>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="close">Close</button>
+                    <input type="submit" value="Send message" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+    $(document).ready(function ()
+    {
+        "use strict";
+
+        var inputBtn = $(".modal-footer input");
+        var responsDiv = $("#dynamicDiv");
+
+        var oldContent = $(
+            "<label for='message-text' class='form-control-label'>Message:</label>" +
+            "<textarea class='form-control' id='message-text' name='Message'></textarea>"
+        );
+        var errorMessage = $(
+            "<div class='container'>" +
+            "<h1 style='color:red'>Something went wrong!!!</h1>" +
+            "</div>"
+        );
+        var successMessage = $(
+            "<div class='container'>" +
+            "<h1 style='color:green'>Message sent successfully!!!</h1>" +
+            "</div>"
+        );
+
+        var message;
+
+        $("#exampleModal").on("show.bs.modal", function (event)
+        {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+
+            var recipientFullName = button.data('whatever1');
+            var recipientID = button.data('whatever2');
+
+            var modal = $(this);
+
+            modal.find(".modal-title").text("New message to " + recipientFullName);
+            modal.find(".appendString").text(recipientFullName);
+            modal.find(".hiddenID").val(recipientID);
+
+            $("#valError").hide();
+            inputBtn.show();
+            responsDiv.empty();
+            responsDiv.append(oldContent);
+
+        });
+
+        $("#myForm").on("submit", function (e)
+        {
+            e.preventDefault();
+
+            if (!$.trim($("#dynamicDiv textarea").val()))
+            {
+                $("#valError").show();
+                return;
+            }
+
+            var dataToPost = $(this).serialize();
+
+            $.post('@Url.Action("AnswerToRequest", "PersonalDashboard")', dataToPost)
+                .done(function ()
+                {
+                    message = successMessage;
+                })
+                .fail(function () {
+
+                    message = errorMessage;
+
+                }).always(function ()
+                {
+                    $("#valError").hide();
+                    inputBtn.hide();
+                    responsDiv.empty();
+                    responsDiv.append(message);
+                });
+        });
+
+    });
+    </script>
+}

@@ -5,6 +5,9 @@ namespace LendADogDemo.MVC.App_Start
 {
     using System;
     using System.Web;
+    using LendADogDemo.Entities.DataContexts;
+    using LendADogDemo.Entities.Infrastructure;
+    using LendADogDemo.Entities.Interfaces;
     using LendADogDemo.Entities.UoW;
     using LendADogDemo.MVC.Servisis;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
@@ -63,9 +66,19 @@ namespace LendADogDemo.MVC.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
+            kernel.Bind<LendADogDemoDb>().ToSelf().InRequestScope();
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>().InRequestScope();
+
+            kernel.Bind<IDogOwnerRepository>().To<DogOwnerRepository>().InRequestScope();
+            kernel.Bind<IDogRepository>().To<DogRepository>().InRequestScope();
+            kernel.Bind<IDogPhotoRepository>().To<DogPhotoRepository>().InRequestScope();
+            kernel.Bind<IPrivateMessageBoardRepository>().To<PrivateMessageBoardRepository>().InRequestScope();
+            kernel.Bind<IRequestMessageRepository>().To<RequestMessageRepository>().InRequestScope();
+            kernel.Bind<IMainMessageBoardRepository>().To<MainMessageBoardRepository>().InRequestScope();
+
             kernel.Bind<IPersonalDashboardService>().To<PersonalDashboardService>().InRequestScope();
             kernel.Bind<IDogService>().To<DogService>().InRequestScope();
+            kernel.Bind<IMainDashboardService>().To<MainDashboardService>().InRequestScope();
         }        
     }
 }

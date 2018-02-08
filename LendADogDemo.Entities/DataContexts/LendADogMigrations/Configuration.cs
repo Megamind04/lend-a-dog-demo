@@ -1,10 +1,6 @@
 namespace LendADogDemo.Entities.DataContexts.LendADogMigrations
 {
     using LendADogDemo.Entities.Helpers;
-    using LendADogDemo.Entities.Models;
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
 
@@ -18,11 +14,6 @@ namespace LendADogDemo.Entities.DataContexts.LendADogMigrations
 
         protected override void Seed(LendADogDemo.Entities.DataContexts.LendADogDemoDb context)
         {
-            //  This method will be called after migrating to the latest version.
-
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data.
-
             //if (System.Diagnostics.Debugger.IsAttached == false)
             //{
             //    System.Diagnostics.Debugger.Launch();
@@ -35,7 +26,7 @@ namespace LendADogDemo.Entities.DataContexts.LendADogMigrations
 
             if (!context.RequestMessages.Any())
             {
-                context.RandomRequestMessages(3);
+                context.RandomRequestMessages(5);
             }
 
             if (!context.MainMessages.Any())
@@ -47,7 +38,6 @@ namespace LendADogDemo.Entities.DataContexts.LendADogMigrations
             {
                 context.RandomPrivateBoardMessages(5, 3);
             }
-
         }
     }
 }

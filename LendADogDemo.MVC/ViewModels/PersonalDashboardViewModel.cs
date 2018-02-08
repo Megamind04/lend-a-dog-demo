@@ -8,11 +8,11 @@ namespace LendADogDemo.MVC.ViewModels
 {
     public class PersonalDashboardViewModel
     {
-        public List<NotConfirmedUsersRequestViewModel> NotConfirmedUsersRequests { get; set; }
+        public IEnumerable<NotConfirmedUsersRequestViewModel> NotConfirmedUsersRequests { get; set; }
 
-        public List<ConversationViewModel> Conversations { get; set; }
+        public IEnumerable<ConversationViewModel> Conversations { get; set; }
 
-        public List<DogViewModel> Dogs { get; set; }
+        public IEnumerable<DogViewModel> Dogs { get; set; }
     }
 
     public class NotConfirmedUsersRequestViewModel

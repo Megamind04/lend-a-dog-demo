@@ -39,4 +39,14 @@ namespace LendADogDemo.MVC.ViewModels
     //{
     //    public HttpPostedFileBase 
     //}
+
+    public class PrivateMessageBoardViewModel
+    {
+        [Required]
+        public string RrecivedFromID { get; set; }
+
+        [Required]
+        [StringLength(150)]
+        public string Message { get; set; }
+    }
 }

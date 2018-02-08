@@ -1,19 +1,12 @@
 ﻿using System;
-using LendADogDemo.Entities.Interfaces;
-using LendADogDemo.Entities.Models;
-
+using LendADogDemo.Entities.DataContexts;
 
 namespace LendADogDemo.Entities.UoW
 {
     public interface IUnitOfWork : IDisposable
     {
-        IDogOwnerRepository DogOwnerRepo { get; }
-        IDogRepository DogRepo { get; }
-        IDogPhotoRepository DogPhotoRepo { get; }
-        IMainMessageBoardRepository MainMessRepo { get; }
-        IPrivateMessageBoardRepository PrivateMessRepo { get; }
-        IRequestMessageRepository RequestMessRepo { get; }
+        LendADogDemoDb Context { get; }
 
-        void Save();
+        void Commit();
     }
 }

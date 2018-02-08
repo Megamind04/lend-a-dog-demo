@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Web;
 
 public enum Size
 {
@@ -19,8 +18,6 @@ namespace LendADogDemo.Entities.Models
         [Key]
         public int DogID { get; set; }
 
-        [Required]
-        [ForeignKey("DogOwner")]
         public string DogOwnerID { get; set; }
 
         [Required]
@@ -34,9 +31,8 @@ namespace LendADogDemo.Entities.Models
         [StringLength(150)]
         public string Description { get; set; }
 
-        
 
+        
         public virtual ICollection<DogPhoto> DogPhotos { get; set; }
-        public virtual DogOwner DogOwner { get; set; }
     }
 }

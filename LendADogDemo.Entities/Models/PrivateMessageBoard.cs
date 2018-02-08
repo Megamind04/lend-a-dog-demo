@@ -9,10 +9,10 @@ namespace LendADogDemo.Entities.Models
         public int PrivateMessID { get; set; }
 
         [Required]
-        public string SenderID { get; set; }
+        public string SendFromID { get; set; }
 
         [Required]
-        public string ReceiverID { get; set; }
+        public string RrecivedFromID { get; set; }
 
         [Required]
         [StringLength(150)]
@@ -20,12 +20,10 @@ namespace LendADogDemo.Entities.Models
 
 
 
-        [ForeignKey("SenderID")]
-        [InverseProperty("SenderDogOwners")]
-        public virtual DogOwner SenderDogOwner { get; set; }
+        [ForeignKey("SendFromID")]
+        public virtual DogOwner SenderOfPrivateMessage { get; set; }
 
-        [ForeignKey("ReceiverID")]
-        [InverseProperty("ReceiverDogOwners")]
-        public virtual DogOwner ReceiverDogOwner { get; set; }
+        [ForeignKey("RrecivedFromID")]
+        public virtual DogOwner ReceiverOfPrivateMessage { get; set; }
     }
 }

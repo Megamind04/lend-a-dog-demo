@@ -22,7 +22,6 @@ namespace LendADogDemo.Entities.Models
         public string Email { get; set; }
 
         [NotMapped]
-        [DisplayName("Full Name")]
         public string FullName => FirstName + " " + LastName;
 
         [Required]
@@ -34,11 +33,8 @@ namespace LendADogDemo.Entities.Models
         public string UserName { get; set; }
 
 
-
+ 
         public virtual ICollection<Dog> Dogs { get; set; }
-        public virtual ICollection<PrivateMessageBoard> SenderDogOwners { get; set; }
-        public virtual ICollection<PrivateMessageBoard> ReceiverDogOwners { get; set; }
-        public virtual ICollection<RequestMessage> SendRequestMessages { get; set; }
         public virtual ICollection<RequestMessage> ReceivedRequestMessages { get; set; }
     }
 }
