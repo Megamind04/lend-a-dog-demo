@@ -331,6 +331,7 @@
     <Content Include="Views\Dog\AddNewDog.cshtml" />
     <Content Include="Views\MainDashboard\MainDashboard.cshtml" />
     <Content Include="Views\Shared\_AnswerToRequest.cshtml" />
+    <Content Include="Views\PersonalDashboard\PersonalDashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

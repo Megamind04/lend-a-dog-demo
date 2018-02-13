@@ -126,7 +126,9 @@
       <DependentUpon>201802070954142_MainMessRelationWithDog.cs</DependentUpon>
     </Compile>
     <Compile Include="DataContexts\LendADogMigrations\Configuration.cs" />
+    <Compile Include="Helpers\AjaxAuthorizeAttribute.cs" />
     <Compile Include="Helpers\ImageResize.cs" />
+    <Compile Include="Helpers\ListExtensions.cs" />
     <Compile Include="Helpers\RandomGenerator.cs" />
     <Compile Include="Infrastructure\DogOwnerRepository.cs" />
     <Compile Include="Infrastructure\DogPhotoRepository.cs" />

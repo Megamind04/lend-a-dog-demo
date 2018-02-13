@@ -11,16 +11,19 @@ using System.IO;
 using Ninject;
 using System.Diagnostics;
 using System.Data.Entity.Core;
+using LendADogDemo.Entities.Helpers;
 
 namespace LendADogDemo.MVC.Servisis
 {
-    public interface IPersonalDashboardService 
+    public interface IPersonalDashboardService
     {
         PersonalDashboardViewModel GetMyPersonalDashboardModel(string userId);
 
         byte[] GetLastImage(int dogId);
 
         bool CreatePrivetMessage(PrivateMessageBoardViewModel newPrivetMess, string SenderID);
+
+        List<List<DogViewModel>> GetDogsPerUser(string userId);
     }
 
     public class PersonalDashboardService : IPersonalDashboardService
@@ -45,13 +48,32 @@ namespace LendADogDemo.MVC.Servisis
 
         #endregion
 
+        public List<List<DogViewModel>> GetDogsPerUser(string userId)
+        {
+            var dogsToDisplay = dogRepo.GetDogPerOwner(userId).ToList().SplitList(3);
+
+            return dogsToDisplay
+                .Select(x => x
+                .Select(d => new DogViewModel()
+                {
+                    DogID = d.DogID,
+                    DogOwnerID = d.DogOwnerID,
+                    DogName = d.DogName,
+                    DogSize = d.DogSize,
+                    Description = d.Description,
+
+                })
+                .ToList())
+                .ToList();
+        }
+
         public PersonalDashboardViewModel GetMyPersonalDashboardModel(string userId)
         {
 
             #region Geting Information for personalDashboardViewModel
             IEnumerable<DogViewModel> DogsToDisplay()
             {
-                return dogRepo.GetDogWithPhotos(userId).Select(x => new DogViewModel()
+                return dogRepo.GetDogPerOwner(userId).Select(x => new DogViewModel()
                 {
                     DogID = x.DogID,
                     DogOwnerID = x.DogOwnerID,
@@ -101,7 +123,7 @@ namespace LendADogDemo.MVC.Servisis
             return dogPhotoRepo.Get(filter: x => x.DogID == dogId).LastOrDefault().Photo;
         }
 
-        public bool CreatePrivetMessage(PrivateMessageBoardViewModel newPrivetMess,string SenderID)
+        public bool CreatePrivetMessage(PrivateMessageBoardViewModel newPrivetMess, string SenderID)
         {
             PrivateMessageBoard messageToInser = new PrivateMessageBoard()
             {
@@ -116,10 +138,17 @@ namespace LendADogDemo.MVC.Servisis
                 unitOfWork.Commit();
                 return true;
             }
-            catch(EntityException ex)
+            catch (EntityException ex)
             {
                 Debug.WriteLine(ex.Message);
                 return false;
+            }
+            finally
+            {
+                if (unitOfWork != null)
+                {
+                    unitOfWork.Dispose();
+                }
             }
         }
 

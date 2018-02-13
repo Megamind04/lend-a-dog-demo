@@ -1,0 +1,111 @@
+﻿
+@{
+    ViewBag.Title = "PersonalDashboard";
+}
+<style>
+    .card-footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+    }
+    .card {
+        max-width: 348px;
+    }
+    .card-deck .card {
+        padding-bottom: 50px;
+    }
+</style>
+
+<br />
+<br />
+
+<section>
+
+    <div id="demo" class="carousel slide" data-ride="carousel" style="text-align:center" data-interval="0">
+
+        <div class="carousel-inner">
+
+
+
+        </div>
+        <a class="carousel-control-prev" href="#demo" data-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </a>
+        <a class="carousel-control-next" href="#demo" data-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </a>
+    </div>
+
+</section>
+
+
+
+
+
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+    $(document).ready(function ()
+    {
+        "use strict";
+
+         var mainContainerDogsToDisplay = $(".carousel-inner");
+         var carouselItem;
+         var stringHTML;
+
+         $.get('@Url.Action("JsonDogsPerUser", "PersonalDashboard")')
+             .done(function (data) {
+                 HtmlDisplayDogs(data);
+             })
+             .fail(function (xhr)
+             {
+                 if (xhr.status == 403) {
+                     var response = $.parseJSON(xhr.responseText);
+                     window.location = response.LogOnUrl;
+                 }
+             });
+
+         function HtmlDisplayDogs(data)
+         {
+             $.each(data, (index, itemList) =>
+             {
+                     stringHTML = '';
+                     if (index === 0) {
+                         stringHTML = '<div class="carousel-item active">';
+                     }
+                     else
+                     {
+                         stringHTML = '<div class="carousel-item">';
+                     }
+
+                     stringHTML = stringHTML + '<div class="container">' + '<div class="card-deck ">';
+
+                     $.each(itemList, (index, item) =>
+                     {
+                         var showDogPhoto = '@Url.Action("ShowPhoto","PersonalDashboard")?dogId=' + item.DogID;
+
+                         stringHTML = stringHTML + '<div class="card">' +
+                             '<img class="card-img-top" src="' + showDogPhoto + '" alt= "Card image cap" > ' +
+                             '<div class="card-block">' +
+                             '<h4 class="card-title">' + item.DogName + '</h4>' +
+                             '</div>' +
+                             '</div>';
+                     });
+
+                     stringHTML = stringHTML +
+                         '</div>' +
+                         '</div>' +
+                         '</div>';
+                     carouselItem = $(stringHTML);
+                     mainContainerDogsToDisplay.append(carouselItem);
+
+             });
+         };
+
+    });
+    </script>
+
+}
+

@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using LendADogDemo.MVC.Servisis;
 using LendADogDemo.MVC.ViewModels;
 using Microsoft.AspNet.Identity;
+using LendADogDemo.Entities.Helpers;
+using System.Web.Script.Serialization;
 
 namespace LendADogDemo.MVC.Controllers
 {
@@ -28,7 +31,7 @@ namespace LendADogDemo.MVC.Controllers
 
         #endregion
 
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         public ActionResult PersonalDashboardMain()
         {
@@ -51,11 +54,16 @@ namespace LendADogDemo.MVC.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [AjaxAuthorize]
         [ValidateAntiForgeryToken]
         public ActionResult AnswerToRequest(PrivateMessageBoardViewModel dataToPost)
         {
             string userId = User.Identity.GetUserId();
+
+            //if (string.IsNullOrEmpty(userId))
+            //{
+            //    return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+            //}
 
             if (!ModelState.IsValid)
             {
@@ -76,6 +84,34 @@ namespace LendADogDemo.MVC.Controllers
                     return Json(data: false);
                 }
             }
+        }
+
+        [HttpGet]
+        [Authorize]
+        public ActionResult PersonalDashboard()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [AjaxAuthorize]
+        public ActionResult JsonDogsPerUser()
+        {
+            string userId = User.Identity.GetUserId();
+
+            var bla = personalDashboardService.GetDogsPerUser(userId);
+            
+            if(bla != null)
+            {
+                //JsonResult igi = new JsonResult();
+                //igi.Data = bla;
+                //igi.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+                //igi.MaxJsonLength = Int32.MaxValue;
+                return Json(data: bla,behavior:JsonRequestBehavior.AllowGet);
+                //return igi;
+            }
+
+            return Json(false);
         }
     }
 }

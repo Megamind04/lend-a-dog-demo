@@ -5,6 +5,6 @@ namespace LendADogDemo.Entities.Interfaces
 {
     public interface IDogRepository : IRepository<Dog>
     {
-        IEnumerable<Dog> GetDogWithPhotos(string dogOwnerId);
+        IEnumerable<Dog> GetDogPerOwner(string dogOwnerId);
     }
 }

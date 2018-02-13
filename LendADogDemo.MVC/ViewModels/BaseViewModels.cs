@@ -24,6 +24,8 @@ namespace LendADogDemo.MVC.ViewModels
         [StringLength(150)]
         public string Description { get; set; }
 
+        //public byte[] LastDogPhoto { get; set; }
+
         //public DogPhotoViewModel Photo { get; set; }
     }
 

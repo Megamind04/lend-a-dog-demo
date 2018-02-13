@@ -15,10 +15,10 @@ namespace LendADogDemo.Entities.Infrastructure
 
         }
 
-        public IEnumerable<Dog> GetDogWithPhotos(string dogOwnerId)
+        public IEnumerable<Dog> GetDogPerOwner(string dogOwnerId)
         {
             return dbSet
-                .Include(g => g.DogPhotos)
+                //.Include(g => g.DogPhotos)
                 .Where(d => d.DogOwnerID == dogOwnerId)
                 .AsNoTracking();
         }
