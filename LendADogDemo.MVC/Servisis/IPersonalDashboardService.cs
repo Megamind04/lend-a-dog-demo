@@ -23,7 +23,11 @@ namespace LendADogDemo.MVC.Servisis
 
         bool CreatePrivetMessage(PrivateMessageBoardViewModel newPrivetMess, string SenderID);
 
-        List<List<DogViewModel>> GetDogsPerUser(string userId);
+        IEnumerable<IEnumerable<DogViewModel>> GetDogsPerUser(string userId);
+
+        IEnumerable<ConversationViewModel> GetConversationsPerUser(string userId);
+
+        IEnumerable<NotConfirmedUsersRequestViewModel> GetConfirmationsPerUser(string userId);
     }
 
     public class PersonalDashboardService : IPersonalDashboardService
@@ -48,7 +52,7 @@ namespace LendADogDemo.MVC.Servisis
 
         #endregion
 
-        public List<List<DogViewModel>> GetDogsPerUser(string userId)
+        public IEnumerable<IEnumerable<DogViewModel>> GetDogsPerUser(string userId)
         {
             var dogsToDisplay = dogRepo.GetDogPerOwner(userId).ToList().SplitList(3);
 
@@ -61,10 +65,33 @@ namespace LendADogDemo.MVC.Servisis
                     DogName = d.DogName,
                     DogSize = d.DogSize,
                     Description = d.Description,
+                    LastDogPhoto = Convert.ToBase64String(d.DogPhotos.LastOrDefault().Photo)
 
-                })
-                .ToList())
-                .ToList();
+                }));
+        }
+
+        public IEnumerable<ConversationViewModel> GetConversationsPerUser(string userId)
+        {
+            return privateMessageBoardRepo.GetByDogOwnerId(userId)
+                       .GroupBy(x => x, new ConversationComparer())
+                       .Select(g => g.Last())
+                       .Select(m => new ConversationViewModel()
+                       {
+                           LastMessage = m.Message,
+                           OtherFullName = m.SendFromID == userId ? m.ReceiverOfPrivateMessage.FullName : m.SenderOfPrivateMessage.FullName,
+                           OtherID = m.SendFromID == userId ? m.RrecivedFromID : m.SendFromID
+                       });
+        }
+
+        public IEnumerable<NotConfirmedUsersRequestViewModel> GetConfirmationsPerUser(string userId)
+        {
+            return requestMessageRepo.GetUnconfirmedRequests(userId)
+                           .Select(x => new NotConfirmedUsersRequestViewModel()
+                           {
+                               RequestFromID = x.SendFromID,
+                               Message = x.Message,
+                               RequestFromFullName = x.SenderOfRequest.FullName
+                           });
         }
 
         public PersonalDashboardViewModel GetMyPersonalDashboardModel(string userId)
@@ -80,6 +107,7 @@ namespace LendADogDemo.MVC.Servisis
                     DogName = x.DogName,
                     DogSize = x.DogSize,
                     Description = x.Description,
+                    LastDogPhoto = Convert.ToBase64String(x.DogPhotos.LastOrDefault().Photo)
                 });
             }
 
@@ -120,7 +148,16 @@ namespace LendADogDemo.MVC.Servisis
 
         public byte[] GetLastImage(int dogId)
         {
-            return dogPhotoRepo.Get(filter: x => x.DogID == dogId).LastOrDefault().Photo;
+            try
+            {
+                return dogPhotoRepo.Get(filter: x => x.DogID == dogId).LastOrDefault().Photo;
+            }
+            catch(NullReferenceException ex)
+            {
+                Debug.Write(ex.Message);
+                return null;
+            }
+            
         }
 
         public bool CreatePrivetMessage(PrivateMessageBoardViewModel newPrivetMess, string SenderID)

@@ -21,7 +21,7 @@ namespace LendADogDemo.Entities.DataContexts.LendADogMigrations
 
             if (!context.Dogs.Any())
             {
-                context.RandomDogsPerDogOwner(3, 3);
+                context.RandomDogsPerDogOwner(7, 3);
             }
 
             if (!context.RequestMessages.Any())

@@ -7,16 +7,15 @@ namespace LendADogDemo.Entities.Helpers
 {
     public static class ImageResize
     {
-        public static Image Resize(this Image image, int width, int height)
+        public static byte[] ResizeImageConvertInBytes(this Image image, int width, int height)
         {
-            var newSize = CalculateResizedDimensions(image, width, height);
+            byte[] desiredArrey = null;
 
-            var destImage = new Bitmap(newSize.Width, newSize.Height, PixelFormat.Format32bppArgb);
+            var newSize = CalculateResizedDimensions(image, 360, 270);
 
-            //destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
-            destImage.SetResolution(72, 72);
+            Bitmap fullSizeBitmap = new Bitmap(image, newSize);
 
-            using (var graphics = Graphics.FromImage(destImage))
+            using (var graphics = Graphics.FromImage(fullSizeBitmap))
             {
                 graphics.CompositingMode = CompositingMode.SourceCopy;
                 graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -28,10 +27,18 @@ namespace LendADogDemo.Entities.Helpers
                 {
                     attribute.SetWrapMode(WrapMode.TileFlipXY);
 
-                    graphics.DrawImage(image, new Rectangle(new Point(0, 0), newSize), 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, attribute);
+                    graphics.DrawImage(fullSizeBitmap, new Rectangle(new Point(0, 0), newSize), 0, 0, fullSizeBitmap.Width, fullSizeBitmap.Height, GraphicsUnit.Pixel, attribute);
                 }
             }
-            return destImage;
+
+            using (MemoryStream resultStream = new MemoryStream())
+            {
+                fullSizeBitmap.Save(resultStream, ImageFormat.Jpeg);
+                desiredArrey = resultStream.ToArray();
+                resultStream.Close();
+            }
+            fullSizeBitmap.Dispose();
+            return desiredArrey;
         }
 
         private static System.Drawing.Size CalculateResizedDimensions(Image image, int desiredWidth, int desiredHeight)
@@ -48,17 +55,5 @@ namespace LendADogDemo.Entities.Helpers
             };
         }
 
-        public static byte[] ImageToByteArray(this Image imageIn)
-        {
-            byte[] newPhoto = null;
-            using (MemoryStream ms = new MemoryStream())
-            {
-                imageIn.Save(ms, ImageFormat.Jpeg);
-                newPhoto = ms.ToArray();
-                ms.Close();
-            }
-
-            return newPhoto;
-        }
     }
 }

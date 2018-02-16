@@ -10,7 +10,6 @@ namespace LendADogDemo.MVC.ViewModels
     {
         public int DogID { get; set; }
 
-        //[Required]
         public string DogOwnerID { get; set; }
 
         [Required]
@@ -24,23 +23,12 @@ namespace LendADogDemo.MVC.ViewModels
         [StringLength(150)]
         public string Description { get; set; }
 
-        //public byte[] LastDogPhoto { get; set; }
-
-        //public DogPhotoViewModel Photo { get; set; }
+        public string LastDogPhoto { get; set; }
     }
 
     public class DogPhotoViewModel
     {
-        //[Required]
-        public int DogID { get; set; }
-
-        //public string DogPhoto { get; set; } 
     }
-
-    //public class DogPhotoUploadViewModel
-    //{
-    //    public HttpPostedFileBase 
-    //}
 
     public class PrivateMessageBoardViewModel
     {

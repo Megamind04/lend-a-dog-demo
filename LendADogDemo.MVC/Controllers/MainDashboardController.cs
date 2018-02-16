@@ -23,7 +23,7 @@ namespace LendADogDemo.MVC.Controllers
         #endregion
 
         [HttpGet]
-        //[Authorize]
+        [Authorize]
         public ActionResult MainDashboard()
         {
             MainDashboardViewModel mainDashboard = mainDashboardService.GetMainDashboardModel();

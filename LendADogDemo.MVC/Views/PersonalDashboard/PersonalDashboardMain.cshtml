@@ -2,23 +2,56 @@
 @{
     ViewBag.Title = "PersonalDashboardMain";
 }
-<br />
-<br />
+
 <style>
     .card-footer {
         position: absolute;
         bottom: 0;
         width: 100%;
     }
-    .card{
-        max-width:348px;
+
+    .card {
+        max-width: 348px;
     }
+
     .card-deck .card {
         padding-bottom: 50px;
     }
-</style>
-<section>
 
+    .carousel-control-prev-icon {
+        background-image: url('../../img/imageedit_12_4716315180.png');
+        width: 50px;
+        height: 50px;
+    }
+
+    .carousel-control-next-icon {
+        background-image: url('../../img/imageedit_10_8141798302.png');
+        width: 50px;
+        height: 50px;
+    }
+
+    .scrollDiv {
+        max-height: 350px;
+        overflow-y: scroll;
+        max-width: 530px;
+    }
+
+    h2, h4 {
+        font-family: inherit;
+    }
+
+    .listTitle {
+        background-color: #e6b253;
+        max-width: 530px;
+        margin: 0;
+        border: groove;
+        padding-top: 10px;
+        padding-bottom: 5px;
+        padding-left: 5px
+    }
+</style>
+
+<section style="padding-top:40px">
     <div id="demo" class="carousel slide" data-ride="carousel" style="text-align:center" data-interval="0">
         <div class="carousel-inner">
             <div class="carousel-item active">
@@ -27,13 +60,9 @@
                         <div class="card">
                             <img class="card-img-top" src="~/img/Sleeping-Puppy.jpg" alt="Card image cap">
                             <div class="card-block">
-                                <h4 class="card-title">Card title</h4>
-                                <p class="card-text">BlaBlaBla</p>
-                                <p class="card-text">BlaBlaBla</p>
-                                <p class="card-text">BlaBlaBla</p>
-                            </div>
-                            <div class="card-block">
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                <h4 class="card-title">Dog Info:</h4>
+                                <p class="card-text">Name: Baron</p>
+                                <p class="card-text">Size: Average</p>
                             </div>
                             <div class="card-footer">
                                 <small class="text-muted">Last updated 3 mins ago</small>
@@ -42,14 +71,9 @@
                         <div class="card">
                             <img class="card-img-top" src="~/img/Sleeping-Puppy.jpg" alt="Card image cap">
                             <div class="card-block">
-                                <h4 class="card-title">Card title</h4>
-
-                                <p class="card-text">BlaBlaBla</p>
-                                <p class="card-text">BlaBlaBla</p>
-                                <p class="card-text">BlaBlaBla</p>
-                            </div>
-                            <div class="card-block">
-                                <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+                                <h4 class="card-title">Dog Info:</h4>
+                                <p class="card-text">Name: Baron</p>
+                                <p class="card-text">Size: Average</p>
                             </div>
                             <div class="card-footer">
                                 <small class="text-muted">Last updated 3 mins ago</small>
@@ -58,14 +82,9 @@
                         <div class="card">
                             <img class="card-img-top" src="~/img/Sleeping-Puppy.jpg" alt="Card image cap">
                             <div class="card-block">
-                                <h4 class="card-title">Card title</h4>
-
-                                <p class="card-text">BlaBlaBla</p>
-                                <p class="card-text">BlaBlaBla</p>
-                                <p class="card-text">BlaBlaBla</p>
-                            </div>
-                            <div class="card-block">
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                                <h4 class="card-title">Dog Info:</h4>
+                                <p class="card-text">Name: Baron</p>
+                                <p class="card-text">Size: Average</p>
                             </div>
                             <div class="card-footer">
                                 <small class="text-muted">Last updated 3 mins ago</small>
@@ -74,105 +93,56 @@
                     </div>
                 </div>
             </div>
-
-            <div class="carousel-item">
-                <div class="container">
-                    <div class="card-group">
-                        <div class="card">
-                            <img class="card-img-top" src="~/img/Sleeping-Puppy.jpg" alt="Card image cap">
-                            <div class="card-block">
-                                <h4 class="card-title">Card title</h4>
-                                <p class="card-text">BlaBlaBla</p>
-                                <p class="card-text">BlaBlaBla</p>
-                                <p class="card-text">BlaBlaBla</p>
-                            </div>
-                            <div class="card-block">
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <img class="card-img-top" src="~/img/Sleeping-Puppy.jpg" alt="Card image cap">
-                            <div class="card-block">
-                                <h4 class="card-title">Card title</h4>
-
-                                <p class="card-text">BlaBlaBla</p>
-                                <p class="card-text">BlaBlaBla</p>
-                                <p class="card-text">BlaBlaBla</p>
-                            </div>
-                            <div class="card-block">
-                                <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <img class="card-img-top" src="~/img/Sleeping-Puppy.jpg" alt="Card image cap">
-                            <div class="card-block">
-                                <h4 class="card-title">Card title</h4>
-
-                                <p class="card-text">BlaBlaBla</p>
-                                <p class="card-text">BlaBlaBla</p>
-                                <p class="card-text">BlaBlaBla</p>
-                            </div>
-                            <div class="card-block">
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="carousel-item">
-                <div class="container">
-                    <div class="card-group">
-                        <div class="card">
-                            <img class="card-img-top" src="~/img/Sleeping-Puppy.jpg" alt="Card image cap">
-                            <div class="card-block">
-                                <h4 class="card-title">Card title</h4>
-                                <p class="card-text">BlaBlaBla</p>
-                                <p class="card-text">BlaBlaBla</p>
-                                <p class="card-text">BlaBlaBla</p>
-                            </div>
-                            <div class="card-block">
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            </div>
-                        </div>
-                        @*<div class="card">
-                            <img class="card-img-top" src="~/img/Sleeping-Puppy.jpg" alt="Card image cap">
-                            <div class="card-block">
-                                <h4 class="card-title">Card title</h4>
-
-                                <p class="card-text">BlaBlaBla</p>
-                                <p class="card-text">BlaBlaBla</p>
-                                <p class="card-text">BlaBlaBla</p>
-                            </div>
-                            <div class="card-block">
-                                <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <img class="card-img-top" src="~/img/Sleeping-Puppy.jpg" alt="Card image cap">
-                            <div class="card-block">
-                                <h4 class="card-title">Card title</h4>
-
-                                <p class="card-text">BlaBlaBla</p>
-                                <p class="card-text">BlaBlaBla</p>
-                                <p class="card-text">BlaBlaBla</p>
-                            </div>
-                            <div class="card-block">
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-                            </div>
-                        </div>*@
-                    </div>
-                </div>
-            </div>
+            <a class="carousel-control-prev" href="#demo" data-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </a>
+            <a class="carousel-control-next" href="#demo" data-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </a>
         </div>
-        <a class="carousel-control-prev" href="#demo" data-slide="prev">
-            <span class="carousel-control-prev-icon"></span>
-        </a>
-        <a class="carousel-control-next" href="#demo" data-slide="next">
-            <span class="carousel-control-next-icon"></span>
-        </a>
     </div>
 
 </section>
+
+<section class="container" style="padding-top:40px">
+    <div class="row">
+        <div class="col-lg-6" style="padding-bottom:15px">
+            <div>
+                <h2 class="listTitle">Conversations :</h2>
+            </div>
+            <div class="scrollDiv">
+                <ul class="list-group" style="text-align:start">
+                    @foreach (var item in Model.Conversations)
+                    {
+                        <li class="list-group-item">
+                            @Html.HiddenFor(m => item.OtherID)
+                            <strong>Conversations With: </strong>@Html.DisplayFor(m => item.OtherFullName)<br />
+                            <strong>Last Message: </strong>@Html.DisplayFor(m => item.LastMessage)
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-6" style="padding-bottom:15px">
+            <div>
+                <h2 class="listTitle">Confirmation Requests :</h2>
+            </div>
+            <div class="scrollDiv">
+                <ul class="list-group" style="text-align:start">
+                    @foreach (var item in Model.NotConfirmedUsersRequests)
+                    {
+                        <li class="list-group-item">
+                            @Html.HiddenFor(m => item.RequestFromID)
+                            <strong>Request From: </strong>@Html.DisplayFor(m => item.RequestFromFullName)<br />
+                            <strong>Request Message: </strong>@Html.DisplayFor(m => item.Message)
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")}

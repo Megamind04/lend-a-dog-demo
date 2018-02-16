@@ -1,0 +1,52 @@
+﻿.card-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.card {
+    max-width: 348px;
+    
+}
+    .card img {
+        max-height: 230px;
+    }
+
+.card-deck {
+    justify-content: center;
+}
+
+.card-deck .card {
+    padding-bottom: 50px;
+}
+
+.scrollDiv {
+    max-height: 350px;
+    overflow-y: scroll;
+    max-width: 530px;
+}
+
+h2, h4 {
+    font-family: inherit;
+}
+
+.listTitle {
+    background-color: #e6b253;
+    max-width: 530px;
+    margin: 0;
+    border: groove;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    padding-left: 5px
+}
+.carousel-control-prev-icon {
+    background-image: url('../../img/imageedit_12_4716315180.png');
+    width: 50px;
+    height: 50px;
+}
+
+.carousel-control-next-icon {
+    background-image: url('../../img/imageedit_10_8141798302.png');
+    width: 50px;
+    height: 50px;
+}

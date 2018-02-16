@@ -230,7 +230,10 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\business-casual.css" />
     <Content Include="Content\business-casual.min.css" />
-    <Content Include="Content\PROBA.css" />
+    <Content Include="img\imageedit_10_8141798302.png" />
+    <Content Include="img\imageedit_12_4716315180.png" />
+    <Content Include="MyCss\PersonalDashboard.css" />
+    <Content Include="MyCss\PROBA.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -239,6 +242,7 @@
     </Content>
     <Content Include="img\dogsatdogpark.jpg" />
     <Content Include="img\Sleeping-Puppy.jpg" />
+    <Content Include="MyScripts\MainDashboard.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -272,6 +276,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="MyScripts\PersonalDashboard.js" />
     <Content Include="Scripts\popper-utils.js" />
     <Content Include="Scripts\popper-utils.min.js" />
     <Content Include="Scripts\popper.js" />
@@ -332,6 +337,9 @@
     <Content Include="Views\MainDashboard\MainDashboard.cshtml" />
     <Content Include="Views\Shared\_AnswerToRequest.cshtml" />
     <Content Include="Views\PersonalDashboard\PersonalDashboard.cshtml" />
+    <Content Include="Views\PersonalDashboard\_PersonalDashboardDogs.cshtml" />
+    <Content Include="Views\PersonalDashboard\_PersonalDashboardConversations.cshtml" />
+    <Content Include="Views\PersonalDashboard\_PersonalDashboardConfirmations.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,12 @@
+﻿@model IEnumerable<LendADogDemo.MVC.ViewModels.NotConfirmedUsersRequestViewModel>
+
+<ul class="list-group" style="text-align:start">
+    @foreach (var item in Model)
+    {
+        <li class="list-group-item">
+            @Html.HiddenFor(m => item.RequestFromID)
+            <strong>Request From: </strong>@Html.DisplayFor(m => item.RequestFromFullName)<br />
+            <strong>Request Message: </strong>@Html.DisplayFor(m => item.Message)
+        </li>
+    }
+</ul>

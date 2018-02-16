@@ -31,7 +31,7 @@ namespace LendADogDemo.MVC.Controllers
 
         #endregion
 
-        //[Authorize]
+
         [HttpGet]
         public ActionResult PersonalDashboardMain()
         {
@@ -44,6 +44,7 @@ namespace LendADogDemo.MVC.Controllers
             return View(personalDashboard);
         }
 
+        [HttpGet]
         public ActionResult ShowPhoto(int dogId)
         {
             var imageToDisplay = personalDashboardService.GetLastImage(dogId);
@@ -53,17 +54,13 @@ namespace LendADogDemo.MVC.Controllers
                 : null;
         }
 
+
         [HttpPost]
         [AjaxAuthorize]
         [ValidateAntiForgeryToken]
         public ActionResult AnswerToRequest(PrivateMessageBoardViewModel dataToPost)
         {
             string userId = User.Identity.GetUserId();
-
-            //if (string.IsNullOrEmpty(userId))
-            //{
-            //    return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
-            //}
 
             if (!ModelState.IsValid)
             {
@@ -99,19 +96,44 @@ namespace LendADogDemo.MVC.Controllers
         {
             string userId = User.Identity.GetUserId();
 
-            var bla = personalDashboardService.GetDogsPerUser(userId);
-            
-            if(bla != null)
+            var dogsPerUser = personalDashboardService.GetDogsPerUser(userId);
+
+            if (dogsPerUser != null)
             {
-                //JsonResult igi = new JsonResult();
-                //igi.Data = bla;
-                //igi.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
-                //igi.MaxJsonLength = Int32.MaxValue;
-                return Json(data: bla,behavior:JsonRequestBehavior.AllowGet);
-                //return igi;
+                //JsonResult JsonDogsPerUser = new JsonResult
+                //{
+                //    Data = dogsPerUser,
+                //    JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                //    MaxJsonLength = int.MaxValue
+                //};
+                //return JsonDogsPerUser;
+                //return Json(dogsPerUser,JsonRequestBehavior.AllowGet);
+                return PartialView("_PersonalDashboardDogs",dogsPerUser);
             }
 
-            return Json(false);
+            return null;
+        }
+
+        [HttpGet]
+        [AjaxAuthorize]
+        public ActionResult ConversationsPerUser()
+        {
+            string userId = User.Identity.GetUserId();
+
+            var conversationsPerUser = personalDashboardService.GetConversationsPerUser(userId);
+
+            return PartialView("_PersonalDashboardConversations", conversationsPerUser);
+        }
+
+        [HttpGet]
+        [AjaxAuthorize]
+        public ActionResult ConfirmationsPerUser()
+        {
+            string userId = User.Identity.GetUserId();
+
+            var confirmationsPerUser = personalDashboardService.GetConfirmationsPerUser(userId);
+
+            return PartialView("_PersonalDashboardConfirmations", confirmationsPerUser);
         }
     }
 }

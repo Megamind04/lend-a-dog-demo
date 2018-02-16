@@ -1,32 +1,16 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "PersonalDashboard";
 }
-<style>
-    .card-footer {
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-    }
-    .card {
-        max-width: 348px;
-    }
-    .card-deck .card {
-        padding-bottom: 50px;
-    }
-</style>
+@section MyCss{<link href="~/MyCss/PersonalDashboard.css" rel="stylesheet" type="text/css" />}
 
-<br />
-<br />
+<div>
+    <button id="kopce" type="button" class="btn btn-primary">Click</button>
+</div>
 
-<section>
-
+<section style="padding-top:40px">
     <div id="demo" class="carousel slide" data-ride="carousel" style="text-align:center" data-interval="0">
-
-        <div class="carousel-inner">
-
-
-
+        <div class="carousel-inner" role="listbox">
+            @{Html.RenderAction("JsonDogsPerUser", "PersonalDashboard");}
         </div>
         <a class="carousel-control-prev" href="#demo" data-slide="prev">
             <span class="carousel-control-prev-icon"></span>
@@ -35,77 +19,52 @@
             <span class="carousel-control-next-icon"></span>
         </a>
     </div>
+</section>
+
+<section class="container" style="padding-top:40px">
+    <div class="row">
+        <div class="col-lg-6" style="padding-bottom:15px">
+            <div>
+                <h2 class="listTitle">Conversations :</h2>
+            </div>
+            <div id="scrollDiv1" class="scrollDiv">
+                @{Html.RenderAction("ConversationsPerUser", "PersonalDashboard");}
+            </div>
+        </div>
+        <div class="col-lg-6" style="padding-bottom:15px">
+            <div>
+                <h2 class="listTitle">Confirmation Requests :</h2>
+            </div>
+            <div id="scrollDiv2" class="scrollDiv">
+                @{Html.RenderAction("ConfirmationsPerUser", "PersonalDashboard");}
+            </div>
+        </div>
+    </div>
 
 </section>
 
 
+@section scripts{@Scripts.Render("~/bundles/jqueryval")
+<script>
+    $(document).ready(function () {
 
+        var mainContainerDogsToDisplay = $(".carousel-inner");
+        var kopce = $('#kopce');
 
+        kopce.on('click', function () {
 
+            $.get('/PersonalDashboard/JsonDogsPerUser')
+                .done(function (data) {
+                    ;
+                    mainContainerDogsToDisplay.html(data)
+                })
+                .fail(function (xhr) {
+                    if (xhr.status == 403) {
 
-@section Scripts{
-    @Scripts.Render("~/bundles/jqueryval")
-
-    <script>
-    $(document).ready(function ()
-    {
-        "use strict";
-
-         var mainContainerDogsToDisplay = $(".carousel-inner");
-         var carouselItem;
-         var stringHTML;
-
-         $.get('@Url.Action("JsonDogsPerUser", "PersonalDashboard")')
-             .done(function (data) {
-                 HtmlDisplayDogs(data);
-             })
-             .fail(function (xhr)
-             {
-                 if (xhr.status == 403) {
-                     var response = $.parseJSON(xhr.responseText);
-                     window.location = response.LogOnUrl;
-                 }
-             });
-
-         function HtmlDisplayDogs(data)
-         {
-             $.each(data, (index, itemList) =>
-             {
-                     stringHTML = '';
-                     if (index === 0) {
-                         stringHTML = '<div class="carousel-item active">';
-                     }
-                     else
-                     {
-                         stringHTML = '<div class="carousel-item">';
-                     }
-
-                     stringHTML = stringHTML + '<div class="container">' + '<div class="card-deck ">';
-
-                     $.each(itemList, (index, item) =>
-                     {
-                         var showDogPhoto = '@Url.Action("ShowPhoto","PersonalDashboard")?dogId=' + item.DogID;
-
-                         stringHTML = stringHTML + '<div class="card">' +
-                             '<img class="card-img-top" src="' + showDogPhoto + '" alt= "Card image cap" > ' +
-                             '<div class="card-block">' +
-                             '<h4 class="card-title">' + item.DogName + '</h4>' +
-                             '</div>' +
-                             '</div>';
-                     });
-
-                     stringHTML = stringHTML +
-                         '</div>' +
-                         '</div>' +
-                         '</div>';
-                     carouselItem = $(stringHTML);
-                     mainContainerDogsToDisplay.append(carouselItem);
-
-             });
-         };
-
+                        window.location = xhr.responseJSON.LogOnUrl;
+                    }
+                });
+        });
     });
-    </script>
-
-}
-
+</script>}
+@*@section MyScripts{<script src="~/MyScripts/PersonalDashboard.js"></script>}*@

@@ -45,8 +45,7 @@ namespace LendADogDemo.MVC.Servisis
                     DogID = m.DogID,
                     DogName = m.Dog.DogName,
                     DogSize = m.Dog.DogSize,
-                    Description = m.Dog.Description,
-                    
+                    Description = m.Dog.Description,  
                 });
             }
 

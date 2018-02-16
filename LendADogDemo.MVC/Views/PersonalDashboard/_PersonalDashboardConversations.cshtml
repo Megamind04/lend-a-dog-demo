@@ -1,0 +1,12 @@
+﻿@model IEnumerable<LendADogDemo.MVC.ViewModels.ConversationViewModel>
+
+<ul class="list-group" style="text-align:start">
+    @foreach (var item in Model)
+    {
+        <li class="list-group-item">
+            @Html.HiddenFor(m => item.OtherID)
+            <strong>Conversations With: </strong>@Html.DisplayFor(m => item.OtherFullName)<br />
+            <strong>Last Message: </strong>@Html.DisplayFor(m => item.LastMessage)
+        </li>
+    }
+</ul>

@@ -1,0 +1,53 @@
+﻿@model IEnumerable<IEnumerable<LendADogDemo.MVC.ViewModels.DogViewModel>>
+
+
+@foreach (var list in Model.Select((value, i) => new { i, value }))
+{
+    if (list.i == 0)
+    {
+        <div class="carousel-item active">
+            <div class="container">
+                <div class="card-deck">
+                    @foreach (var item in list.value)
+                    {
+                        <div class="card">
+                            <img class="card-img-top" src="data:image/jpeg;base64,@item.LastDogPhoto " alt="Card image cap">
+                            <div class="card-block">
+                                <h4 class="card-title">Dog Info:</h4>
+                                <p class="card-text">Name: @item.DogName</p>
+                                <p class="card-text">Size: @item.DogSize</p>
+                                <div class="card-footer">
+                                    <small class="text-muted">Last updated 3 mins ago</small>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="carousel-item">
+            <div class="container">
+                <div class="card-deck">
+                    @foreach (var item in list.value)
+                    {
+                        <div class="card">
+                            <img class="card-img-top" src="data:image/jpeg;base64,@item.LastDogPhoto " alt="Card image cap">
+                            <div class="card-block">
+                                <h4 class="card-title">Dog Info:</h4>
+                                <p class="card-text">Name: @item.DogName</p>
+                                <p class="card-text">Size: @item.DogSize</p>
+                                <div class="card-footer">
+                                    <small class="text-muted">Last updated 3 mins ago</small>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+}

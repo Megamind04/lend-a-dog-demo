@@ -67,3 +67,46 @@
     border-radius: 5px;
 }
 
+.myGridBase {
+    display: grid;
+    grid-auto-columns: minmax(auto,80px);
+    grid-template: "name name . size size" minmax(auto, auto) ". img img img ." minmax(auto, auto) ". img img img ." minmax(auto, auto) ". img img img ."minmax(auto, auto) "des des des des des" minmax(auto, auto) "des des des des des" minmax(auto, auto);
+    margin-bottom: 40px;
+}
+
+.myGridRow1 {
+    grid-area: name;
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 0.25rem !important;
+}
+
+.myGridRow2 {
+    grid-area: size;
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 0.25rem !important;
+}
+
+.myGridRow3 {
+    grid-area: img;
+}
+
+.myGridRow4 {
+    grid-area: des;
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 0.25rem !important;
+}
+
+
+@media (min-width: 500px) {
+    .MegaGrid {
+        display: grid;
+        grid-template-columns: 100%;
+    }
+}
+
+@media (min-width: 700px) {
+    .MegaGrid {
+        display: grid;
+        grid-template-columns: 50% 50%;
+    }
+}

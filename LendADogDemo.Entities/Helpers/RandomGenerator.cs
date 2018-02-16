@@ -150,14 +150,14 @@ namespace LendADogDemo.Entities.Helpers
 
             var aveablePhotos = Directory.GetFiles(currentDirName);
 
-            byte[][] bla = new byte[aveablePhotos.Length][];
+            byte[][] ImagesBytes = new byte[aveablePhotos.Length][];
 
             for (int i = 0; i < aveablePhotos.Length; i++)
             {
                 using (Image img = Image.FromFile(aveablePhotos[i]))
                 {
-                    img.Resize(760, 540);
-                    bla[i] = img.ImageToByteArray();
+                    var imgBiteNew = img.ResizeImageConvertInBytes(360, 270);
+                    ImagesBytes[i] = imgBiteNew;
                 }
             }
 
@@ -202,9 +202,8 @@ namespace LendADogDemo.Entities.Helpers
                             {
                                 DogPhoto newDogPhoto = new DogPhoto()
                                 {
-                                    DogID = newDog.DogID,
-                                    //Photo = File.ReadAllBytes(aveablePhotos[random.Next(aveablePhotos.Length)])
-                                    Photo = bla[random.Next(bla.Length)]
+                                    DogID = newDog.DogID,                                    
+                                    Photo = ImagesBytes[random.Next(ImagesBytes.Length)]
                                 };
                                 newDog.DogPhotos.Add(newDogPhoto);
                             }
