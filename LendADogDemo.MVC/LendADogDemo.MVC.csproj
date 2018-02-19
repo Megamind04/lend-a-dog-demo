@@ -210,6 +210,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\CSharpRazorViewEngine.cs" />
     <Compile Include="Servisis\IDogService.cs" />
     <Compile Include="Servisis\IMainDashboardService.cs" />
     <Compile Include="Servisis\IPersonalDashboardService.cs" />
@@ -232,6 +233,7 @@
     <Content Include="Content\business-casual.min.css" />
     <Content Include="img\imageedit_10_8141798302.png" />
     <Content Include="img\imageedit_12_4716315180.png" />
+    <Content Include="MyCss\modal.css" />
     <Content Include="MyCss\PersonalDashboard.css" />
     <Content Include="MyCss\PROBA.css" />
     <Content Include="favicon.ico" />
@@ -335,11 +337,14 @@
     <Content Include="Views\PersonalDashboard\PersonalDashboardMain.cshtml" />
     <Content Include="Views\Dog\AddNewDog.cshtml" />
     <Content Include="Views\MainDashboard\MainDashboard.cshtml" />
-    <Content Include="Views\Shared\_AnswerToRequest.cshtml" />
     <Content Include="Views\PersonalDashboard\PersonalDashboard.cshtml" />
-    <Content Include="Views\PersonalDashboard\_PersonalDashboardDogs.cshtml" />
-    <Content Include="Views\PersonalDashboard\_PersonalDashboardConversations.cshtml" />
-    <Content Include="Views\PersonalDashboard\_PersonalDashboardConfirmations.cshtml" />
+    <Content Include="Views\PersonalDashboard\PersonalDashboardPartialViews\_DogsPerUser.cshtml" />
+    <Content Include="Views\PersonalDashboard\PersonalDashboardPartialViews\_ConversationsPerUser.cshtml" />
+    <Content Include="Views\PersonalDashboard\PersonalDashboardPartialViews\_ConfirmationsPerUser.cshtml" />
+    <Content Include="Views\Dog\_dogDeleteModal.cshtml" />
+    <Content Include="Views\PersonalDashboard\PersonalDashboardPartialViews\_PersonalDashboardModal.cshtml" />
+    <Content Include="Views\Dog\DogPartialViews\_EditDogDisplay.cshtml" />
+    <Content Include="Views\Dog\DogPartialViews\_DeleteDogDisplay.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

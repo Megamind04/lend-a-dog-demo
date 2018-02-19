@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using LendADogDemo.Entities.Helpers;
 using LendADogDemo.MVC.Servisis;
 using LendADogDemo.MVC.ViewModels;
 using Microsoft.AspNet.Identity;
@@ -11,15 +12,15 @@ namespace LendADogDemo.MVC.Controllers
 {
     public class DogController : Controller
     {
-        private IDogService _dogService;
+        private IDogService dogService;
 
         public DogController()
         {
 
         }
-        public DogController(IDogService dogService)
+        public DogController(IDogService _dogService)
         {
-            _dogService = dogService;
+            dogService = _dogService;
         }
 
         [HttpGet]
@@ -39,7 +40,7 @@ namespace LendADogDemo.MVC.Controllers
             //var errors = ModelState.Where(v => v.Value.Errors.Any());
             if (ModelState.IsValid)
             {
-                if (_dogService.CreateDog(dogToBeCreated, userId, uploadPhoto))
+                if (dogService.CreateDog(dogToBeCreated, userId, uploadPhoto))
                 {
                     return RedirectToAction("Index", "Home");
                 }
@@ -52,6 +53,48 @@ namespace LendADogDemo.MVC.Controllers
             {
                 return View(dogToBeCreated);
             }
+        }
+
+        [HttpPost]
+        [AjaxAuthorize]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteDog(int DogID)
+        {
+            if (dogService.DeleteDog(DogID))
+            {
+                return Json(true);
+            }
+            return Json(false);
+        }
+
+        [HttpPost]
+        [AjaxAuthorize]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditDog(DogViewModel DogToBeEdited)
+        {
+            if (dogService.EditDog(DogToBeEdited))
+            {
+                return Json(true);
+            }
+            return Json(false);
+        }
+
+        [HttpGet]
+        [AjaxAuthorize]
+        public ActionResult EditDogDisplay(int DogID)
+        {
+            var dogForEdit = dogService.GetDog(DogID);
+
+            return PartialView(dogForEdit);
+        }
+
+        [HttpGet]
+        [AjaxAuthorize]
+        public ActionResult DeleteDogDisplay(int DogID)
+        {
+            var dogForDelete = dogService.GetDog(DogID);
+
+            return PartialView(dogForDelete);
         }
     }
 }

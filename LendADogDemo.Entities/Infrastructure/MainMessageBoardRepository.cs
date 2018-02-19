@@ -19,5 +19,10 @@ namespace LendADogDemo.Entities.Infrastructure
         {
             return dbSet.Where(m => m.Answered == false).Include(d => d.Dog).Include(o=>o.RequestSender);
         }
+
+        public IEnumerable<MainMessageBoard> GetMainMessageByDogID(int DogID)
+        {
+            return dbSet.Where(d => d.DogID == DogID);
+        }
     }
 }

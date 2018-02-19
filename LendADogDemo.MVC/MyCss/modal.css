@@ -1,0 +1,15 @@
+﻿.modal.vertically-modal .modal-dialog {
+    transform: translateY(-25%);
+    top: 50%;
+    margin: 0 auto;
+}
+
+.modal.vertically-modal.show .modal-dialog {
+    transform: translateY(-50%);
+}
+
+.modal-content {
+    max-height: 100vh;
+    overflow-y: auto;
+    padding: 40px;
+}

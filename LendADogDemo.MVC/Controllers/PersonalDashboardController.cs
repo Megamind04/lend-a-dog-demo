@@ -13,6 +13,7 @@ using System.Web.Script.Serialization;
 
 namespace LendADogDemo.MVC.Controllers
 {
+    [RoutePrefix("PersonalDashboard")]
     public class PersonalDashboardController : Controller
     {
 
@@ -31,7 +32,7 @@ namespace LendADogDemo.MVC.Controllers
 
         #endregion
 
-
+        [Route("PersonalDashboardMain")]
         [HttpGet]
         public ActionResult PersonalDashboardMain()
         {
@@ -44,6 +45,7 @@ namespace LendADogDemo.MVC.Controllers
             return View(personalDashboard);
         }
 
+        [Route("ShowPhoto/{dogId:int}")]
         [HttpGet]
         public ActionResult ShowPhoto(int dogId)
         {
@@ -54,7 +56,7 @@ namespace LendADogDemo.MVC.Controllers
                 : null;
         }
 
-
+        [Route("AnswerToRequest")]
         [HttpPost]
         [AjaxAuthorize]
         [ValidateAntiForgeryToken]
@@ -82,7 +84,8 @@ namespace LendADogDemo.MVC.Controllers
                 }
             }
         }
-
+        
+        [Route("PersonalDashboard")]
         [HttpGet]
         [Authorize]
         public ActionResult PersonalDashboard()
@@ -90,30 +93,21 @@ namespace LendADogDemo.MVC.Controllers
             return View();
         }
 
+        [Route("DogsPerUser")]
         [HttpGet]
         [AjaxAuthorize]
-        public ActionResult JsonDogsPerUser()
+        public ActionResult DogsPerUser()
         {
             string userId = User.Identity.GetUserId();
 
             var dogsPerUser = personalDashboardService.GetDogsPerUser(userId);
 
-            if (dogsPerUser != null)
-            {
-                //JsonResult JsonDogsPerUser = new JsonResult
-                //{
-                //    Data = dogsPerUser,
-                //    JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                //    MaxJsonLength = int.MaxValue
-                //};
-                //return JsonDogsPerUser;
-                //return Json(dogsPerUser,JsonRequestBehavior.AllowGet);
-                return PartialView("_PersonalDashboardDogs",dogsPerUser);
-            }
+            return PartialView(dogsPerUser);
 
-            return null;
+
         }
 
+        [Route("ConversationsPerUser")]
         [HttpGet]
         [AjaxAuthorize]
         public ActionResult ConversationsPerUser()
@@ -122,9 +116,10 @@ namespace LendADogDemo.MVC.Controllers
 
             var conversationsPerUser = personalDashboardService.GetConversationsPerUser(userId);
 
-            return PartialView("_PersonalDashboardConversations", conversationsPerUser);
+            return PartialView(conversationsPerUser);
         }
 
+        [Route("ConfirmationsPerUser")]
         [HttpGet]
         [AjaxAuthorize]
         public ActionResult ConfirmationsPerUser()
@@ -133,7 +128,7 @@ namespace LendADogDemo.MVC.Controllers
 
             var confirmationsPerUser = personalDashboardService.GetConfirmationsPerUser(userId);
 
-            return PartialView("_PersonalDashboardConfirmations", confirmationsPerUser);
+            return PartialView(confirmationsPerUser);
         }
     }
 }

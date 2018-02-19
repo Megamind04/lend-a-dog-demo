@@ -17,20 +17,25 @@ namespace LendADogDemo.MVC.Servisis
     public interface IDogService
     {
         bool CreateDog(DogViewModel dogToBeCreated, string userId, HttpPostedFileBase photo);
+        bool DeleteDog(int DogId);
+        bool EditDog(DogViewModel dogToBeEdited);
+        DogViewModel GetDog(int DogID);
     }
 
     public class DogService : IDogService
     {
-        private IUnitOfWork _unitOfWork;
+        private IUnitOfWork unitOfWork;
 
-        private IDogRepository _dogRepo;
-        private IDogPhotoRepository _dogPhotoRepo;
+        private IDogRepository dogRepo;
+        private IDogPhotoRepository dogPhotoRepo;
+        private IMainMessageBoardRepository mainDashboardRepo;
 
-        public DogService(IUnitOfWork unitOfWork, IDogRepository dogRepo, IDogPhotoRepository dogPhotoRepo)
+        public DogService(IUnitOfWork _unitOfWork, IDogRepository _dogRepo, IDogPhotoRepository _dogPhotoRepo, IMainMessageBoardRepository _mainDashboardRepo)
         {
-            _unitOfWork = unitOfWork;
-            _dogRepo = dogRepo;
-            _dogPhotoRepo = dogPhotoRepo;
+            unitOfWork = _unitOfWork;
+            dogRepo = _dogRepo;
+            dogPhotoRepo = _dogPhotoRepo;
+            mainDashboardRepo = _mainDashboardRepo;
         }
 
         public bool CreateDog(DogViewModel dogToBeCreated, string userId, HttpPostedFileBase uploadPhoto)
@@ -44,8 +49,8 @@ namespace LendADogDemo.MVC.Servisis
             };
             try
             {
-                _dogRepo.Insert(newDog);
-                _unitOfWork.Commit();
+                dogRepo.Insert(newDog);
+                unitOfWork.Commit();
 
                 DogPhoto newDogPhoto = new DogPhoto()
                 {
@@ -53,8 +58,8 @@ namespace LendADogDemo.MVC.Servisis
                     Photo = ConvertPhoto(uploadPhoto)
                 };
 
-                _dogPhotoRepo.Insert(newDogPhoto);
-                _unitOfWork.Commit();
+                dogPhotoRepo.Insert(newDogPhoto);
+                unitOfWork.Commit();
 
                 return true;
             }
@@ -63,9 +68,88 @@ namespace LendADogDemo.MVC.Servisis
                 Debug.WriteLine(ex.Message);
                 return false;
             }
+            finally
+            {
+                if (unitOfWork != null)
+                {
+                    unitOfWork.Dispose();
+                }
+            }
         }
 
+        public DogViewModel GetDog(int DogID)
+        {
+            var dogy = dogRepo.GetByID(DogID);
+            DogViewModel dogForEdit = new DogViewModel()
+            {
+                DogID = dogy.DogID,
+                DogOwnerID = dogy.DogOwnerID,
+                DogName = dogy.DogName,
+                DogSize = dogy.DogSize,
+                Description = dogy.Description
+            };
+            return dogForEdit;
+        }
 
+        public bool EditDog(DogViewModel dogToBeEdited)
+        {
+            try
+            {
+                Dog dog = new Dog()
+                {
+                    DogID = dogToBeEdited.DogID,
+                    DogOwnerID = dogToBeEdited.DogOwnerID,
+                    DogName = dogToBeEdited.DogName,
+                    DogSize = dogToBeEdited.DogSize,
+                    Description = dogToBeEdited.Description
+                };
+                dogRepo.Update(dog);
+                unitOfWork.Commit();
+                return true;
+            }
+            catch (EntityException ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return false;
+            }
+            finally
+            {
+                if (unitOfWork != null)
+                {
+                    unitOfWork.Dispose();
+                }
+            }
+        }
+
+        public bool DeleteDog(int DogId)
+        {
+            try
+            {
+                var mainMessages = mainDashboardRepo.GetMainMessageByDogID(DogId);
+                if(mainMessages != null)
+                {
+                    foreach (var item in mainMessages)
+                    {
+                        mainDashboardRepo.Delete(item);
+                    }
+                }
+                dogRepo.Delete(DogId);
+                unitOfWork.Commit();
+                return true;
+            }
+            catch(EntityException ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return false;
+            }
+            finally
+            {
+                if (unitOfWork != null)
+                {
+                    unitOfWork.Dispose();
+                }
+            }
+        }
 
         private static byte[] ConvertPhoto(HttpPostedFileBase photo)
         {

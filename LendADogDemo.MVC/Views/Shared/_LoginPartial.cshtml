@@ -7,7 +7,7 @@
 
     <ul class="navbar-nav mx-auto">
         <li class="nav-item active px-lg-4">
-            @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "PersonalDashboard", "PersonalDashboard",null, htmlAttributes: new { title = "Manage", @class = "nav-link text-uppercase text-expanded", @style = "color:lightyellow" })
+            @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "PersonalDashboard", "PersonalDashboard", null, htmlAttributes: new { title = "Manage", @class = "nav-link text-uppercase text-expanded", @style = "color:lightyellow" })
         </li>
         <li class="nav-item active px-lg-4">
         <a class = "nav-link text-uppercase text-expanded" style = "color:lightyellow" href="javascript:document.getElementById('logoutForm').submit()">Log off</a>

@@ -1,5 +1,12 @@
 ﻿@model IEnumerable<IEnumerable<LendADogDemo.MVC.ViewModels.DogViewModel>>
 
+<style>
+    .divider {
+        width: 10px;
+        height: auto;
+        display: inline-block;
+    }
+</style>
 
 @foreach (var list in Model.Select((value, i) => new { i, value }))
 {
@@ -17,7 +24,15 @@
                                 <p class="card-text">Name: @item.DogName</p>
                                 <p class="card-text">Size: @item.DogSize</p>
                                 <div class="card-footer">
-                                    <small class="text-muted">Last updated 3 mins ago</small>
+                                    <button id="DogDelete" type="button" class="btn btn-primary text-muted" data-toggle="modal" data-target="#personalDashboardModal"
+                                            data-id="@item.DogID" data-name="@item.DogName">
+                                        Delete
+                                    </button>
+                                    <div class="divider"></div>
+                                    <button id="DogEdit" type="button" class="btn btn-primary text-muted" data-toggle="modal" data-target="#personalDashboardModal"
+                                            data-id="@item.DogID" data-name="@item.DogName" style="min-width:74.36px">
+                                        Edit
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -40,7 +55,15 @@
                                 <p class="card-text">Name: @item.DogName</p>
                                 <p class="card-text">Size: @item.DogSize</p>
                                 <div class="card-footer">
-                                    <small class="text-muted">Last updated 3 mins ago</small>
+                                    <button id="DogDelete" type="button" class="btn btn-primary text-muted" data-toggle="modal" data-target="#personalDashboardModal"
+                                            data-id="@item.DogID" data-name="@item.DogName">
+                                        Delete
+                                    </button>
+                                    <div class="divider"></div>
+                                    <button id="DogEdit" type="button" class="btn btn-primary text-muted" data-toggle="modal" data-target="#personalDashboardModal"
+                                            data-id="@item.DogID" data-name="@item.DogName" style="min-width:74.36px">
+                                        Edit
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -49,5 +72,4 @@
             </div>
         </div>
     }
-
 }

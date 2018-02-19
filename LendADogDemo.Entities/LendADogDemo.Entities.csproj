@@ -121,9 +121,9 @@
     <Compile Include="DataContexts\LendADogMigrations\201801301519192_fixingNamesAndRelations.Designer.cs">
       <DependentUpon>201801301519192_fixingNamesAndRelations.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataContexts\LendADogMigrations\201802070954142_MainMessRelationWithDog.cs" />
-    <Compile Include="DataContexts\LendADogMigrations\201802070954142_MainMessRelationWithDog.Designer.cs">
-      <DependentUpon>201802070954142_MainMessRelationWithDog.cs</DependentUpon>
+    <Compile Include="DataContexts\LendADogMigrations\201802191252545_MainMessRelationWithDog.cs" />
+    <Compile Include="DataContexts\LendADogMigrations\201802191252545_MainMessRelationWithDog.Designer.cs">
+      <DependentUpon>201802191252545_MainMessRelationWithDog.cs</DependentUpon>
     </Compile>
     <Compile Include="DataContexts\LendADogMigrations\Configuration.cs" />
     <Compile Include="Helpers\AjaxAuthorizeAttribute.cs" />
@@ -177,8 +177,8 @@
     <EmbeddedResource Include="DataContexts\LendADogMigrations\201801301519192_fixingNamesAndRelations.resx">
       <DependentUpon>201801301519192_fixingNamesAndRelations.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DataContexts\LendADogMigrations\201802070954142_MainMessRelationWithDog.resx">
-      <DependentUpon>201802070954142_MainMessRelationWithDog.cs</DependentUpon>
+    <EmbeddedResource Include="DataContexts\LendADogMigrations\201802191252545_MainMessRelationWithDog.resx">
+      <DependentUpon>201802191252545_MainMessRelationWithDog.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

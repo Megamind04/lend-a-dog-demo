@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LendADogDemo.MVC.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,6 +14,10 @@ namespace LendADogDemo.MVC
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
+
+            ViewEngines.Engines.Clear();
+            ViewEngines.Engines.Add(new CSharpRazorViewEngine());
+
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);

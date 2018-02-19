@@ -20,6 +20,7 @@ namespace LendADogDemo.MVC.ViewModels
         [StringLength(50)]
         public string DogName { get; set; }
 
+        [Required]
         [StringLength(150)]
         public string Description { get; set; }
 

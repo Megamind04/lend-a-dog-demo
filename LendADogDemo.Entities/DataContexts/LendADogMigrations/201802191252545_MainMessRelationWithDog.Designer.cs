@@ -13,7 +13,7 @@ namespace LendADogDemo.Entities.DataContexts.LendADogMigrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201802070954142_MainMessRelationWithDog"; }
+            get { return "201802191252545_MainMessRelationWithDog"; }
         }
         
         string IMigrationMetadata.Source
