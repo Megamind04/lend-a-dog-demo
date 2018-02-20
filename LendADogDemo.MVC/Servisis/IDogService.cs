@@ -11,6 +11,8 @@ using System.Web;
 using System.IO;
 using System.Data.Entity.Core;
 using System.Diagnostics;
+using LendADogDemo.Entities.Helpers;
+using System.Drawing;
 
 namespace LendADogDemo.MVC.Servisis
 {
@@ -55,7 +57,8 @@ namespace LendADogDemo.MVC.Servisis
                 DogPhoto newDogPhoto = new DogPhoto()
                 {
                     DogID = newDog.DogID,
-                    Photo = ConvertPhoto(uploadPhoto)
+                    //Photo = ConvertPhoto(uploadPhoto)
+                    Photo = Image.FromStream(uploadPhoto.InputStream).ResizeImageConvertInBytes(360, 270)
                 };
 
                 dogPhotoRepo.Insert(newDogPhoto);

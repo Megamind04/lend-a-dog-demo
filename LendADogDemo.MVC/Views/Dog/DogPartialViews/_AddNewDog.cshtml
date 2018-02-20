@@ -1,0 +1,86 @@
+﻿@model LendADogDemo.MVC.ViewModels.DogViewModel
+
+@Html.AntiForgeryToken()
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+<div class="form-group" id="CreateDog">
+    <h1 id="Msg" class="form-control-label">Create New Dog </h1>
+</div>
+
+<div class="form-group row">
+    <div class="input-group mb-3">
+        @Html.TextBoxFor(m => m.DogName, new { @class = "form-control", @aria_describedby = "basic-addon1" })
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Dog Name</span>
+        </div>
+    </div>
+    <div class="col-sm-7">
+        @Html.ValidationMessageFor(m => m.DogName, "", new { @class = "badge badge-pill badge-danger " })
+    </div>
+</div>
+<div class="form-group row">
+    <div class="input-group mb-3">
+        @Html.EnumDropDownListFor(m => m.DogSize, new { @class = "form-control", @aria_describedby = "basic-addon1" })
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Dog Size</span>
+        </div>
+    </div>
+    <div class="col-sm-7">
+        @Html.ValidationMessageFor(m => m.DogSize, "", new { @class = "badge badge-pill badge-danger " })
+    </div>
+</div>
+<div class="form-group row">
+    <div class="input-group mb-3">
+        @Html.TextAreaFor(m => m.Description, new { @class = "form-control", @aria_describedby = "basic-addon1" })
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Dog Description</span>
+        </div>
+    </div>
+    <div class="col-sm-7">
+        @Html.ValidationMessageFor(m => m.Description, "", new { @class = "badge badge-pill badge-danger " })
+    </div>
+</div>
+<div class="form-group row ">
+    <div class="input-group mb-3">
+        <label for="imgInp" class="btn btn-outline-primary">Select Dog Photo</label>
+        <input type="file" name="uploadPhoto" id="imgInp" accept=".jpg" style="visibility:hidden" />
+
+    </div>
+    <div class="col-sm-7">
+        <p class="badge-danger form-control" id="jas" hidden>Only jpg format are allowed</p>
+    </div>
+</div>
+<div class="col-sm-4 align-self-center">
+    <img src="~/img/Sleeping-Puppy.jpg" class="img-fluid" id="img1" style="min-width:300px" />
+</div>
+
+<script>
+        $(document).ready(function () {
+            function showPhoto(uploadedFile) {
+                if (uploadedFile.files && uploadedFile.files[0]) {
+
+                    var reader = new FileReader();
+
+                    reader.readAsDataURL(uploadedFile.files[0]);
+
+                    reader.onload = function () {
+                        $('#img1').attr('src', reader.result);
+                    }
+                }
+            }
+
+            $("#imgInp").change(function () {
+
+                var filename = $(this).val();
+                var ext = filename.substr((filename.lastIndexOf('.') + 1));
+
+                if (ext == 'jpg') {
+                    showPhoto(this);
+                } else {
+                    $('#img1').attr('src', 'http://dogsaholic.com/wp-content/uploads/2015/04/Puppy-sleep-routine.jpg')
+                    $('#jas').removeAttr('hidden');
+                }
+            });
+        })
+</script>

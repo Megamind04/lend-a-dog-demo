@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using LendADogDemo.Entities.Helpers;
@@ -27,7 +28,8 @@ namespace LendADogDemo.MVC.Controllers
         [Authorize]
         public ActionResult AddNewDog()
         {
-            return View();
+            //return View();
+            return PartialView();
         }
 
         [HttpPost]
@@ -42,16 +44,19 @@ namespace LendADogDemo.MVC.Controllers
             {
                 if (dogService.CreateDog(dogToBeCreated, userId, uploadPhoto))
                 {
-                    return RedirectToAction("Index", "Home");
+                    return Json(true);
+                    //return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    return View(dogToBeCreated);
+                    return Json(false);
+                    //return View(dogToBeCreated);
                 }
             }
             else
             {
-                return View(dogToBeCreated);
+                return Json(false);
+                //return View(dogToBeCreated);
             }
         }
 
@@ -72,7 +77,15 @@ namespace LendADogDemo.MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditDog(DogViewModel DogToBeEdited)
         {
-            if (dogService.EditDog(DogToBeEdited))
+            if (!ModelState.IsValid)
+            {
+                //var errorList = ModelState.Values.SelectMany(m => m.Errors)
+                //                 .Select(e => e.ErrorMessage)
+                //                 .ToList();
+                //return Json(errorList);
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            else if (dogService.EditDog(DogToBeEdited))
             {
                 return Json(true);
             }

@@ -345,6 +345,7 @@
     <Content Include="Views\PersonalDashboard\PersonalDashboardPartialViews\_PersonalDashboardModal.cshtml" />
     <Content Include="Views\Dog\DogPartialViews\_EditDogDisplay.cshtml" />
     <Content Include="Views\Dog\DogPartialViews\_DeleteDogDisplay.cshtml" />
+    <Content Include="Views\Dog\DogPartialViews\_AddNewDog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

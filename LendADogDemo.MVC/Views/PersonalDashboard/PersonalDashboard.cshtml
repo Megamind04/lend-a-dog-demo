@@ -7,6 +7,13 @@
     <link href="~/MyCss/modal.css" rel="stylesheet" />
 }
 
+<div style="margin-top:20px;text-align:center">
+    <button id="CreateDog" type="button" class="btn btn-primary" data-toggle="modal" data-target="#personalDashboardModal"
+            style="border:groove">
+        Create New Dog
+    </button>
+</div>
+
 <section style="padding-top:40px">
     <div id="demo" class="carousel slide" data-ride="carousel" style="text-align:center" data-interval="0">
         <div class="carousel-inner" role="listbox">
@@ -44,114 +51,145 @@
 
 @{Html.RenderPartial("PersonalDashboardModal"); }
 
-@section scripts{@Scripts.Render("~/bundles/jqueryval")
-<script>
-    $(document).ready(function () {
+@section scripts{@Scripts.Render("~/bundles/jqueryval")}
+@section MyScripts{
+    <script>
+        $(document).ready(function () {
 
-        var inputBtn = $('.modal-footer input');
-        var mainContainerDogs = $(".carousel-inner");
+            var inputBtn = $('.modal-footer input');
+            var mainContainerDogs = $(".carousel-inner");
 
-        $("#personalDashboardModal").unbind().on("show.bs.modal", function (event) {
+            $("#personalDashboardModal").unbind().on("show.bs.modal", function (event) {
 
-            var button = $(event.relatedTarget);
+                var button = $(event.relatedTarget);
 
-            var modal = $(this);
+                var modal = $(this);
 
-            inputBtn.show();
+                inputBtn.show();
 
-            var forminput = modal.find('.modal-body');
-            forminput.empty();
+                var forminput = modal.find('.modal-body');
+                forminput.empty();
 
-            getHtml(button, forminput);
-        });
+                getHtml(button, forminput);
+            });
 
-        function getHtml(button, forminput) {
+            function getHtml(button, forminput) {
 
-            var Id;
-            var url;
+                var url;
 
-            if (button.attr('id') === 'DogDelete') {
-                Id = button.data('id');
-                url = '/Dog/DeleteDogDisplay?DogID=';
-            }
-            else if (button.attr('id') === 'DogEdit') {
-                Id = button.data('id');
-                url = '/Dog/EditDogDisplay?DogID=';
-            }
+                if (button.attr('id') === 'DogDelete') {
+                    var Id = button.data('id');
+                    url = '/Dog/DeleteDogDisplay?DogID=' + Id;
+                }
+                else if (button.attr('id') === 'DogEdit') {
+                    var Id = button.data('id');
+                    url = '/Dog/EditDogDisplay?DogID=' + Id;
+                }
+                else if (button.attr('id') === 'CreateDog') {
+                    url = '/Dog/AddNewDog'
+                }
 
-            $.get(url + Id)
-                .done(function (data) {
-                    forminput.html(data);
-                })
-                .fail(function () {
-                    forminput.append('<h1 id="Msg" >Something went wrong!!!</h1>')
-                });
-        };
-
-        $('#personaldashboardform').on('submit', function (e) {
-
-            e.preventDefault();
-
-            var dataToPost = $(this).serialize();
-
-            var inputid = $('.form-group:first');
-
-            var urls = getUrl(inputid);
-            var urlPost = urls[0];
-            var urlGet = urls[1];
-
-            $.post(urlPost, dataToPost)
-                .done(function () {
-                    $('#Msg').text('Success!!!');
-                    getReload(urlGet);
-                })
-                .fail(function (xhr) {
-                    if (xhr.status == 403) {
-
-                        window.location = xhr.responseJSON.LogOnUrl;
-                    }
-                    $('#Msg').text('Something went wrong!!!');
-
-                }).always(function () {
-                    inputBtn.hide();
-                    $(this).find('input').attr('readonly', 'readonly');
-                });
-        });
-
-        function getUrl(inputid) {
-            if (inputid.attr('id') === 'DeleteDog') {
-                var urls = ['/Dog/DeleteDog', '/PersonalDashboard/DogsPerUser'];
-                return urls;
-            }
-            else if (inputid.attr('id') === 'EditDog') {
-                var urls = ['/Dog/EditDog', '/PersonalDashboard/DogsPerUser'];
-                return urls;
-            }
-        };
-
-        function getReload(urlGet) {
-
-            var mainContainer;
-            var url;
-            if (urlGet === '/PersonalDashboard/DogsPerUser') {
-                mainContainer = mainContainerDogs;
-                url = urlGet;
-            };
-            $('#personalDashboardModal').on('hidden.bs.modal', function (e) {
                 $.get(url)
                     .done(function (data) {
-                        mainContainer.html(data)
+                        forminput.html(data);
+                        $.validator.unobtrusive.parse("#personaldashboardform");
                     })
-                    .fail(function (xhr) {
-                        if (xhr.status == 403) {
-
-                            window.location = xhr.responseJSON.LogOnUrl;
-                        }
-                        $('#Msg').text('Something went wrong!!!');
+                    .fail(function () {
+                        forminput.append('<h1 id="Msg" >Something went wrong!!!</h1>')
                     });
-            })
-        };
-    });
-</script>
+            };
+
+            $('#personaldashboardform').on('submit', function (e) {
+
+                e.preventDefault();
+
+                var inputid = $('.form-group:first');
+
+                var urls = getUrl(inputid);
+                var urlPost = urls[0];
+                var urlGet = urls[1];
+                if (urlPost === '/Dog/AddNewDog') {
+
+                    var formData = new FormData(this);
+
+                    $.ajax({
+                        type: 'POST',
+                        enctype: 'multipart/form-data',
+                        url: urlPost,
+                        data: formData,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            $('#Msg').text('Success!!!');
+                            getReload(urlGet);
+                            inputBtn.hide();
+                        },
+                        error: function (data) {
+                            if (xhr.status == 403) {
+
+                                window.location = xhr.responseJSON.LogOnUrl;
+                            }
+                            $('#Msg').text('Something went wrong!!!');
+                        }
+                    });
+
+
+                } else {
+                    var dataToPost = $(this).serialize();
+                    $.post(urlPost, dataToPost)
+                        .done(function () {
+                            $('#Msg').text('Success!!!');
+                            getReload(urlGet);
+                            inputBtn.hide();
+                        })
+                        .fail(function (xhr) {
+                            if (xhr.status == 403) {
+
+                                window.location = xhr.responseJSON.LogOnUrl;
+                            }
+                            $('#Msg').text('Something went wrong!!!');
+                        });
+                }
+            });
+
+            function getUrl(inputid) {
+                if (inputid.attr('id') === 'DeleteDog') {
+                    var urls = ['/Dog/DeleteDog', '/PersonalDashboard/DogsPerUser'];
+                    return urls;
+                }
+                else if (inputid.attr('id') === 'EditDog') {
+                    var urls = ['/Dog/EditDog', '/PersonalDashboard/DogsPerUser'];
+                    return urls;
+                }
+                else if (inputid.attr('id') === 'CreateDog') {
+                    var urls = ['/Dog/AddNewDog', '/PersonalDashboard/DogsPerUser'];
+                    return urls;
+                }
+            };
+
+            function getReload(urlGet) {
+
+                var mainContainer;
+                var url;
+                if (urlGet === '/PersonalDashboard/DogsPerUser') {
+                    mainContainer = mainContainerDogs;
+                    url = urlGet;
+                };
+                $('#personalDashboardModal').on('hidden.bs.modal', function (e) {
+                    $.get(url)
+                        .done(function (data) {
+                            mainContainer.html(data)
+                        })
+                        .fail(function (xhr) {
+                            if (xhr.status == 403) {
+
+                                window.location = xhr.responseJSON.LogOnUrl;
+                            }
+                            $('#Msg').text('Something went wrong!!!');
+                        });
+                })
+            };
+        });
+    </script>
 }
-@*@section MyScripts{<script src="~/MyScripts/PersonalDashboard.js"></script>}*@
