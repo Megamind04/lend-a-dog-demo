@@ -1,0 +1,8 @@
+﻿@model LendADogDemo.MVC.ViewModels.NotConfirmedUsersRequestViewModel
+
+@Html.AntiForgeryToken()
+
+<div class="form-group" id="Approve">
+    <h1 id="Msg" class="form-control-label"> Verify @Model.RequestFromFullName ?</h1>
+    @Html.HiddenFor(m => m.RequestFromID, htmlAttributes: new { @class = "theInput" })
+</div>

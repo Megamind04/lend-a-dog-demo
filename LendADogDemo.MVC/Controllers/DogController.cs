@@ -25,7 +25,7 @@ namespace LendADogDemo.MVC.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [AjaxAuthorize]
         public ActionResult AddNewDog()
         {
             //return View();
@@ -33,7 +33,7 @@ namespace LendADogDemo.MVC.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [AjaxAuthorize]
         [ValidateAntiForgeryToken]
         public ActionResult AddNewDog([Bind(Exclude = "Photo,DogOwnerID,DogID")] DogViewModel dogToBeCreated, HttpPostedFileBase uploadPhoto)
         {

@@ -203,6 +203,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\DogController.cs" />
+    <Compile Include="Controllers\DogOwnerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MainDashboardController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -211,6 +212,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\CSharpRazorViewEngine.cs" />
+    <Compile Include="Servisis\IDogOwnerService.cs" />
     <Compile Include="Servisis\IDogService.cs" />
     <Compile Include="Servisis\IMainDashboardService.cs" />
     <Compile Include="Servisis\IPersonalDashboardService.cs" />
@@ -245,6 +247,7 @@
     <Content Include="img\dogsatdogpark.jpg" />
     <Content Include="img\Sleeping-Puppy.jpg" />
     <Content Include="MyScripts\MainDashboard.js" />
+    <Content Include="MyScripts\PersonalDashboardNew.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -278,7 +281,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="MyScripts\PersonalDashboard.js" />
+    <Content Include="MyScripts\PersonalDashboardOld.js" />
     <Content Include="Scripts\popper-utils.js" />
     <Content Include="Scripts\popper-utils.min.js" />
     <Content Include="Scripts\popper.js" />
@@ -346,6 +349,7 @@
     <Content Include="Views\Dog\DogPartialViews\_EditDogDisplay.cshtml" />
     <Content Include="Views\Dog\DogPartialViews\_DeleteDogDisplay.cshtml" />
     <Content Include="Views\Dog\DogPartialViews\_AddNewDog.cshtml" />
+    <None Include="Views\DogOwner\DogOwnerPartialViews\_VerifyDogOwnerDisplay.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

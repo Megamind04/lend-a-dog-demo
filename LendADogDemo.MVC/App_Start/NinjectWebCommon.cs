@@ -79,6 +79,7 @@ namespace LendADogDemo.MVC.App_Start
             kernel.Bind<IPersonalDashboardService>().To<PersonalDashboardService>().InRequestScope();
             kernel.Bind<IDogService>().To<DogService>().InRequestScope();
             kernel.Bind<IMainDashboardService>().To<MainDashboardService>().InRequestScope();
+            kernel.Bind<IDogOwnerService>().To<DogOwnerService>().InRequestScope();
         }        
     }
 }

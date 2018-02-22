@@ -28,6 +28,7 @@ namespace LendADogDemo.MVC.Servisis
         IEnumerable<ConversationViewModel> GetConversationsPerUser(string userId);
 
         IEnumerable<NotConfirmedUsersRequestViewModel> GetConfirmationsPerUser(string userId);
+
     }
 
     public class PersonalDashboardService : IPersonalDashboardService
@@ -41,7 +42,9 @@ namespace LendADogDemo.MVC.Servisis
         private readonly IRequestMessageRepository requestMessageRepo;
         private readonly IDogPhotoRepository dogPhotoRepo;
 
-        public PersonalDashboardService(IUnitOfWork _unitOfWork, IDogRepository _dogRepo, IPrivateMessageBoardRepository _privateMessageBoardRepo, IRequestMessageRepository _requestMessageRepo, IDogPhotoRepository _dogPhotoRepo)
+        public PersonalDashboardService(IUnitOfWork _unitOfWork, IDogRepository _dogRepo,
+            IPrivateMessageBoardRepository _privateMessageBoardRepo, IRequestMessageRepository _requestMessageRepo,
+            IDogPhotoRepository _dogPhotoRepo)
         {
             unitOfWork = _unitOfWork;
             dogRepo = _dogRepo;

@@ -17,6 +17,7 @@ namespace LendADogDemo.MVC.ViewModels
 
     public class NotConfirmedUsersRequestViewModel
     {
+        [Required]
         public string RequestFromID { get; set; }
 
         public string RequestFromFullName { get; set; }

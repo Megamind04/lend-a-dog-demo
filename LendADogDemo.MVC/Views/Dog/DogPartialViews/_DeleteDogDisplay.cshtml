@@ -2,7 +2,7 @@
 
 @Html.AntiForgeryToken()
 
-<div class="form-group" id="DeleteDog">
+<div class="form-group" id="DeleteDogPost">
     <h1 id="Msg" class="form-control-label"> Are you sure you want to Delete @Model.DogName ?</h1>
     @Html.HiddenFor(m => m.DogID, htmlAttributes: new { @class = "theInput" })
 </div>

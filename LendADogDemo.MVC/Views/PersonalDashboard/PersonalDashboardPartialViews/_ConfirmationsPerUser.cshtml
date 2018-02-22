@@ -7,6 +7,18 @@
             @Html.HiddenFor(m => item.RequestFromID)
             <strong>Request From: </strong>@Html.DisplayFor(m => item.RequestFromFullName)<br />
             <strong>Request Message: </strong>@Html.DisplayFor(m => item.Message)
+            <div style="margin-top:5px">
+                <button id="Approve" type="button" class="btn btn-primary btn-sm"
+                        data-toggle="modal" data-target="#personalDashboardModal"
+                        data-id="@item.RequestFromID" data-name="@item.RequestFromFullName">
+                    Approve
+                </button>
+                <button id="Deny" type="button" class="btn btn-primary btn-sm"
+                        data-toggle="modal" data-target="#personalDashboardModal"
+                        data-id="@item.RequestFromID" data-name="@item.RequestFromFullName">
+                    Deny
+                </button>
+            </div>
         </li>
     }
 </ul>
