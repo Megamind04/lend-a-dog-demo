@@ -1,8 +1,13 @@
 ﻿@model LendADogDemo.MVC.ViewModels.DogViewModel
 
-@Html.AntiForgeryToken()
-
-<div class="form-group" id="DeleteDogPost">
-    <h1 id="Msg" class="form-control-label"> Are you sure you want to Delete @Model.DogName ?</h1>
-    @Html.HiddenFor(m => m.DogID, htmlAttributes: new { @class = "theInput" })
+<div class="container">
+    <div class="row">
+        <div class="form-group">
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.DogID, htmlAttributes: new { @class = "theInput" })
+        </div>
+        <div class="form-group">
+            <h2>Are you sure you want to Delete <strong>@Model.DogName</strong>???</h2>
+        </div>
+    </div>
 </div>

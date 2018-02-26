@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace LendADogDemo.MVC.ViewModels
 {
@@ -27,10 +25,6 @@ namespace LendADogDemo.MVC.ViewModels
         public string LastDogPhoto { get; set; }
     }
 
-    public class DogPhotoViewModel
-    {
-    }
-
     public class PrivateMessageBoardViewModel
     {
         [Required]
@@ -39,5 +33,37 @@ namespace LendADogDemo.MVC.ViewModels
         [Required]
         [StringLength(150)]
         public string Message { get; set; }
+    }
+
+    public class NotConfirmedUsersRequestViewModel
+    {
+        [Required]
+        public string RequestFromID { get; set; }
+
+        public string RequestFromFullName { get; set; }
+
+        public string Message { get; set; }
+    }
+
+    public class ConversationViewModel
+    {
+        public string OtherID { get; set; }
+
+        public string OtherFullName { get; set; }
+
+        [Required]
+        [StringLength(150)]
+        public string LastMessage { get; set; }
+
+        
+        [DataType(DataType.DateTime)]
+        public DateTime? DateTime { get; set; }
+    }
+
+    public class PrivateConversationBetweenTwoUsers
+    {
+        public IEnumerable<ConversationViewModel> Conversations { get; set; }
+
+        public ConversationViewModel NewConversation { get; set; }
     }
 }

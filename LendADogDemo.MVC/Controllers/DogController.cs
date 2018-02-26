@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using LendADogDemo.Entities.Helpers;
@@ -11,9 +8,12 @@ using Microsoft.AspNet.Identity;
 
 namespace LendADogDemo.MVC.Controllers
 {
+    [RoutePrefix("Dog")]
     public class DogController : Controller
     {
-        private IDogService dogService;
+        #region Initialize
+
+        private readonly IDogService dogService;
 
         public DogController()
         {
@@ -24,90 +24,104 @@ namespace LendADogDemo.MVC.Controllers
             dogService = _dogService;
         }
 
-        [HttpGet]
-        [AjaxAuthorize]
+        #endregion
+
+        [HttpGet,AjaxAuthorize,Route("AddNewDog")]
         public ActionResult AddNewDog()
         {
-            //return View();
             return PartialView();
         }
 
-        [HttpPost]
-        [AjaxAuthorize]
-        [ValidateAntiForgeryToken]
+        [HttpGet,AjaxAuthorize,Route("EditDogDisplay")]
+        public ActionResult EditDogDisplay(int? DogID)
+        {
+            if (DogID == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            else
+            {
+                var dogForEdit = dogService.GetDog((int)DogID);
+
+                return PartialView(dogForEdit);
+            } 
+        }
+
+        [HttpGet, AjaxAuthorize, Route("DeleteDogDisplay")]
+        public ActionResult DeleteDogDisplay(int? DogID)
+        {
+            if (DogID == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            else
+            {
+                var dogForDelete = dogService.GetDog((int)DogID);
+
+                return PartialView(dogForDelete);
+            }  
+        }
+
+        [HttpPost,ValidateAntiForgeryToken,AjaxAuthorize, Route("AddNewDog")]
         public ActionResult AddNewDog([Bind(Exclude = "Photo,DogOwnerID,DogID")] DogViewModel dogToBeCreated, HttpPostedFileBase uploadPhoto)
         {
-            string userId = User.Identity.GetUserId();
-            
-            //var errors = ModelState.Where(v => v.Value.Errors.Any());
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            else
+            {
+                string userId = User.Identity.GetUserId();
+
                 if (dogService.CreateDog(dogToBeCreated, userId, uploadPhoto))
                 {
                     return Json(true);
-                    //return RedirectToAction("Index", "Home");
                 }
                 else
                 {
                     return Json(false);
-                    //return View(dogToBeCreated);
                 }
+            }
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, AjaxAuthorize, Route("DeleteDog/{DogID?}")]
+        public ActionResult DeleteDog(int? DogID)
+        {
+            if(DogID == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             else
             {
-                return Json(false);
-                //return View(dogToBeCreated);
+                if (dogService.DeleteDog((int)DogID))
+                {
+                    return Json(true);
+                }
+                else
+                {
+                    return Json(false);
+                }
             }
         }
 
-        [HttpPost]
-        [AjaxAuthorize]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteDog(int DogID)
-        {
-            if (dogService.DeleteDog(DogID))
-            {
-                return Json(true);
-            }
-            return Json(false);
-        }
-
-        [HttpPost]
-        [AjaxAuthorize]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken, AjaxAuthorize, Route("EditDog")]
         public ActionResult EditDog(DogViewModel DogToBeEdited)
         {
             if (!ModelState.IsValid)
             {
-                //var errorList = ModelState.Values.SelectMany(m => m.Errors)
-                //                 .Select(e => e.ErrorMessage)
-                //                 .ToList();
-                //return Json(errorList);
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            else if (dogService.EditDog(DogToBeEdited))
+            else
             {
-                return Json(true);
-            }
-            return Json(false);
-        }
-
-        [HttpGet]
-        [AjaxAuthorize]
-        public ActionResult EditDogDisplay(int DogID)
-        {
-            var dogForEdit = dogService.GetDog(DogID);
-
-            return PartialView(dogForEdit);
-        }
-
-        [HttpGet]
-        [AjaxAuthorize]
-        public ActionResult DeleteDogDisplay(int DogID)
-        {
-            var dogForDelete = dogService.GetDog(DogID);
-
-            return PartialView(dogForDelete);
+                if (dogService.EditDog(DogToBeEdited))
+                {
+                    return Json(true);
+                }
+                else
+                {
+                    return Json(false);
+                }
+            } 
         }
     }
 }

@@ -2,135 +2,88 @@
 
     'use strict';
 
-    var mainContainer;
-    var inputBtn = $('.modal-footer input');
-    var mainContainerDogs = $(".carousel-inner");
-    var mainContainerConversations = $('.scrollDiv1');
-    var mainContainerConfirmations = $('.scrollDiv2');
-    var forminput = $('.modal-body');
-
     $('#personalDashboardModal').unbind().on('show.bs.modal', function (event) {
 
         var button = $(event.relatedTarget);
         var modal = $(this);
 
         inputBtn.show();
-        mainContainer = null;
-        forminput.empty();
 
         var btnId = button.attr('id');
         var Id = button.data('id');
 
-        getHtml(getUrl[btnId](Id), function (data) {
-            forminput.html(data);
+        info = getInfo[btnId](Id);
+        if (info[4] === 'Large' || info[4] === 'Scroll') {
+            modalSize.addClass('modal-lg');
+        }
+
+        getHtml(info[0], function (data) {
+            formHeader.append(info[1]);
+            formBody.append(data);
             $.validator.unobtrusive.parse("#personaldashboardform");
         });
     });
 
-    function getHtml(url, callback) {
-
-        $.get(url)
-            .done(function (data) {
-                callback(data);
-            })
-            .fail(function () {
-                callback('<h1 id="Msg" >Something went wrong!!!</h1>')
-            });
-    };
+    $('#personalDashboardModal').on('shown.bs.modal', function (event) {
+        if (info[4] === 'Scroll') {
+            $("#scrollDiv3").animate({
+                scrollTop: $('#scrollDiv3')[0].scrollHeight - $('#scrollDiv3')[0].clientHeight
+            }, 1000);
+            inputBtn.hide();
+        }
+    });
 
     $('#personaldashboardform').on('submit', function (e) {
 
         e.preventDefault();
 
-        var input = $('.form-group:first');
-        var inputId = input.attr('id');
-
-        var urls = getUrl[inputId]();
-
-        var urlPost = urls[0];
-        var urlGet = urls[1];
-
         var dataToPost;
         $.ajax({
             type: 'POST',
-            enctype: urlPost === '/Dog/AddNewDog' ? 'multipart/form-data' : null,
-            url: urlPost,
-            data: urlPost === '/Dog/AddNewDog' ? dataToPost = new FormData(this) : dataToPost = $(this).serialize(),
+            enctype: info[3] === '/Dog/AddNewDog' ? 'multipart/form-data' : null,
+            url: info[3],
+            data: info[3] === '/Dog/AddNewDog' ? dataToPost = new FormData(this) : dataToPost = $(this).serialize(),
             cache: false,
-            contentType: urlPost === '/Dog/AddNewDog' ? false : 'application/x-www-form-urlencoded; charset=UTF-8',
-            processData: urlPost === '/Dog/AddNewDog' ? false : true,
+            contentType: info[3] === '/Dog/AddNewDog' ? false : 'application/x-www-form-urlencoded; charset=UTF-8',
+            processData: info[3] === '/Dog/AddNewDog' ? false : true
         }).done(function (data) {
-
-            getReload(urlGet, setContainer);
-
+            if (info[4] === 'Scroll') {
+                getHtml(info[0], function (htmlData) {
+                    formBody.empty();
+                    formBody.append(htmlData);
+                    $("#scrollDiv3").animate({
+                        scrollTop: $('#scrollDiv3')[0].scrollHeight - $('#scrollDiv3')[0].clientHeight
+                    }, 1000);
+                });
+            } else {
+                getReload(info[2], setContainer);
+            }
         }).fail(function (xhr) {
-
-            if (xhr.status == 403) {
-
+            if (xhr.status === 403) {
                 window.location = xhr.responseJSON.LogOnUrl;
             } else {
-                $('#Msg').text('Something went wrong!!!');
+                formBody.empty();
+                formBody.append('<h1>Something went wrong!!!</h1>');
                 inputBtn.hide();
-            };
+            }
         });
     });
 
-    function getReload(url, callback) {
-
-        $('#Msg').text('Success!!!');
-        inputBtn.hide();
-        callback(url);
-
-        $.get(url)
-            .done(function (data) {
-                mainContainer.html(data)
-            })
-            .fail(function (xhr) {
-                if (xhr.status == 403) {
-
-                    window.location = xhr.responseJSON.LogOnUrl;
-                }
-                $('#Msg').text('Something went wrong!!!');
+    $('#personalDashboardModal').on('hide.bs.modal', function (e) {
+        if (info[4] === 'Scroll') {
+            setContainer(info[2]);
+            getHtml(info[2], function (data) {
+                mainContainer.html(data);
             });
-    };
-
-    var getUrl = {
-        'DogDelete': function (Id) {
-            return '/Dog/DeleteDogDisplay?DogID=' + Id;
-        },
-        'DogEdit': function (Id) {
-            return '/Dog/EditDogDisplay?DogID=' + Id;
-        },
-        'CreateDog': function (Id) {
-            return '/Dog/AddNewDog';
-        },
-        'Approve': function (Id) {
-            return '/DogOwner/VerifyDogOwnerDisplay?UserID=' + Id;
-        },
-        'DeleteDogPost': function (Id) {
-            return ['/Dog/DeleteDog', '/PersonalDashboard/DogsPerUser'];
-        },
-        'EditDogPost': function (Id) {
-            return ['/Dog/EditDog', '/PersonalDashboard/DogsPerUser'];
-        },
-        'CreateDogPost': function (Id) {
-            return ['/Dog/AddNewDog', '/PersonalDashboard/DogsPerUser'];
         }
-    };
+    });
 
-    function setContainer(url) {
-        switch (url) {
-            case '/PersonalDashboard/DogsPerUser': mainContainer = mainContainerDogs;
-                break;
-            case '/PersonalDashboard/ConversationsPerUser': mainContainer = mainContainerConversations;
-                break;
-            case '/PersonalDashboard/ConfirmationsPerUser': mainContainer = mainContainerConfirmations;
-                break;
-            default: mainContainer = null;
-        };
-    };
 
     $('#personalDashboardModal').on('hidden.bs.modal', function (e) {
-        forminput.empty();
+        modalSize.removeClass('modal-lg');
+        formHeader.empty();
+        formBody.empty();
+        mainContainer = null;
+        info = null;
     });
 });

@@ -23,5 +23,14 @@ namespace LendADogDemo.Entities.Infrastructure
                 .Where(x => x.RrecivedFromID == userId || x.SendFromID == userId)
                 .AsNoTracking();      
         }
+
+        public IEnumerable<PrivateMessageBoard> GetMessagesBetweenTwoUsers(string userId,string otherId)
+        {
+            return dbSet
+                .Where(x => (x.RrecivedFromID == userId && x.SendFromID == otherId)
+                || (x.SendFromID == userId && x.RrecivedFromID == otherId))
+                .Include(x => x.SenderOfPrivateMessage)
+                .OrderBy(d => d.CreateDate);
+        }
     }
 }

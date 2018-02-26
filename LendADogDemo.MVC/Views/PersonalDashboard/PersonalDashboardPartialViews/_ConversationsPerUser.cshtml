@@ -5,8 +5,19 @@
     {
         <li class="list-group-item">
             @Html.HiddenFor(m => item.OtherID)
-            <strong>Conversations With: </strong>@Html.DisplayFor(m => item.OtherFullName)<br />
-            <strong>Last Message: </strong>@Html.DisplayFor(m => item.LastMessage)
+            <div class="row"style="justify-content:space-between">
+                <div>
+                    <strong>Conversations With: </strong>@Html.DisplayFor(m => item.OtherFullName)<br />
+                    <strong>Last Message: </strong>@Html.DisplayFor(m => item.LastMessage)
+                </div>
+                <div style="margin-top:5px">
+                    <button id="Conversation" type="button" class="btn btn-primary btn-sm"
+                            data-toggle="modal" data-target="#personalDashboardModal"
+                            data-id="@item.OtherID" data-name="@item.OtherFullName">
+                        Open
+                    </button>
+                </div>
+            </div>
         </li>
     }
 </ul>

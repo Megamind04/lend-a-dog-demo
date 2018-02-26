@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LendADogDemo.Entities.Interfaces;
+﻿using LendADogDemo.Entities.Interfaces;
 using LendADogDemo.Entities.UoW;
 using LendADogDemo.MVC.ViewModels;
 using LendADogDemo.Entities.Models;
 using System.Web;
-using System.IO;
 using System.Data.Entity.Core;
 using System.Diagnostics;
 using LendADogDemo.Entities.Helpers;
@@ -19,20 +13,25 @@ namespace LendADogDemo.MVC.Servisis
     public interface IDogService
     {
         bool CreateDog(DogViewModel dogToBeCreated, string userId, HttpPostedFileBase photo);
-        bool DeleteDog(int DogId);
+
         bool EditDog(DogViewModel dogToBeEdited);
+
+        bool DeleteDog(int DogId);
+
         DogViewModel GetDog(int DogID);
     }
 
     public class DogService : IDogService
     {
-        private IUnitOfWork unitOfWork;
+        #region Initialize
 
-        private IDogRepository dogRepo;
-        private IDogPhotoRepository dogPhotoRepo;
-        private IMainMessageBoardRepository mainDashboardRepo;
+        private readonly IUnitOfWork unitOfWork;
+        private readonly IDogRepository dogRepo;
+        private readonly IDogPhotoRepository dogPhotoRepo;
+        private readonly IMainMessageBoardRepository mainDashboardRepo;
 
-        public DogService(IUnitOfWork _unitOfWork, IDogRepository _dogRepo, IDogPhotoRepository _dogPhotoRepo, IMainMessageBoardRepository _mainDashboardRepo)
+        public DogService(IUnitOfWork _unitOfWork, IDogRepository _dogRepo, IDogPhotoRepository _dogPhotoRepo,
+            IMainMessageBoardRepository _mainDashboardRepo)
         {
             unitOfWork = _unitOfWork;
             dogRepo = _dogRepo;
@@ -40,24 +39,26 @@ namespace LendADogDemo.MVC.Servisis
             mainDashboardRepo = _mainDashboardRepo;
         }
 
+        #endregion
+
         public bool CreateDog(DogViewModel dogToBeCreated, string userId, HttpPostedFileBase uploadPhoto)
         {
-            Dog newDog = new Dog()
-            {
-                DogOwnerID = userId,
-                DogName = dogToBeCreated.DogName,
-                DogSize = dogToBeCreated.DogSize,
-                Description = dogToBeCreated.Description
-            };
             try
             {
+                Dog newDog = new Dog()
+                {
+                    DogOwnerID = userId,
+                    DogName = dogToBeCreated.DogName,
+                    DogSize = dogToBeCreated.DogSize,
+                    Description = dogToBeCreated.Description
+                };
+
                 dogRepo.Insert(newDog);
                 unitOfWork.Commit();
 
                 DogPhoto newDogPhoto = new DogPhoto()
                 {
                     DogID = newDog.DogID,
-                    //Photo = ConvertPhoto(uploadPhoto)
                     Photo = Image.FromStream(uploadPhoto.InputStream).ResizeImageConvertInBytes(360, 270)
                 };
 
@@ -78,20 +79,6 @@ namespace LendADogDemo.MVC.Servisis
                     unitOfWork.Dispose();
                 }
             }
-        }
-
-        public DogViewModel GetDog(int DogID)
-        {
-            var dogy = dogRepo.GetByID(DogID);
-            DogViewModel dogForEdit = new DogViewModel()
-            {
-                DogID = dogy.DogID,
-                DogOwnerID = dogy.DogOwnerID,
-                DogName = dogy.DogName,
-                DogSize = dogy.DogSize,
-                Description = dogy.Description
-            };
-            return dogForEdit;
         }
 
         public bool EditDog(DogViewModel dogToBeEdited)
@@ -154,25 +141,18 @@ namespace LendADogDemo.MVC.Servisis
             }
         }
 
-        private static byte[] ConvertPhoto(HttpPostedFileBase photo)
+        public DogViewModel GetDog(int DogID)
         {
-            byte[] newPhoto;
-            using (Stream inputStream = photo.InputStream)
+            var dogy = dogRepo.GetByID(DogID);
+            DogViewModel dogForEdit = new DogViewModel()
             {
-                MemoryStream memoryStream = inputStream as MemoryStream;
-                if (memoryStream == null)
-                {
-                    memoryStream = new MemoryStream();
-                    inputStream.CopyTo(memoryStream);
-                }
-                newPhoto = memoryStream.ToArray();
-                memoryStream.Close();
-            }
-
-            return newPhoto;
-
+                DogID = dogy.DogID,
+                DogOwnerID = dogy.DogOwnerID,
+                DogName = dogy.DogName,
+                DogSize = dogy.DogSize,
+                Description = dogy.Description
+            };
+            return dogForEdit;
         }
-
-
     }
 }

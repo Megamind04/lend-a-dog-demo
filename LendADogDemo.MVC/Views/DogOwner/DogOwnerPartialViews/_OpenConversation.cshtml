@@ -1,0 +1,56 @@
+﻿@model LendADogDemo.MVC.ViewModels.PrivateConversationBetweenTwoUsers
+<style>
+    .textAreaSize{
+        width:100%;
+        max-width:100%;
+        min-height:100px;
+    }
+    .row {
+        margin-left: 0;
+        justify-content: space-between;
+    }
+    .elemetOfForm {
+        align-self:flex-end;
+        width:100%;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div id="scrollDiv3" class="scrollDiv col">
+            @foreach (var item in Model.Conversations)
+            {
+                if (item.OtherID == null)
+                {
+                    <div>
+                        <p><strong>Me:</strong> @item.LastMessage<span style="float:right"><small>@item.DateTime</small></span></p>
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        <p><strong>@item.OtherFullName:</strong> @item.LastMessage<span style="float:right"><small>@item.DateTime</small></span></p>
+                    </div>
+                }
+            }
+        </div>
+        <div class="col" style="display:flex">
+            <div>
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(m => Model.NewConversation.OtherID)
+            </div>
+            <div>
+                @Html.ValidationMessageFor(m => Model.NewConversation.LastMessage, "", new { @class = "badge badge-pill badge-danger " })
+            </div>
+            <div class="elemetOfForm">
+                <div>
+                    @Html.TextAreaFor(m => Model.NewConversation.LastMessage, htmlAttributes: new { @class = "textAreaSize" })
+                </div>
+                <div class="row">
+                    <h2>New Message</h2>
+                    <input type="submit" value="Send" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

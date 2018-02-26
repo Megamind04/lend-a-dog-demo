@@ -2,10 +2,7 @@
     ViewBag.Title = "PersonaleDashboard";
 }
 
-@section MyCss{
-    <link href="~/MyCss/PersonalDashboard.css" rel="stylesheet" type="text/css" />
-    <link href="~/MyCss/modal.css" rel="stylesheet" />
-}
+@section MyCss{<link href="~/MyCss/PersonalDashboard.css" rel="stylesheet" type="text/css" />}
 
 <div style="margin-top:20px;text-align:center">
     <button id="CreateDog" type="button" class="btn btn-primary" data-toggle="modal" data-target="#personalDashboardModal"
@@ -49,7 +46,8 @@
     </div>
 </section>
 
-@{Html.RenderPartial("PersonalDashboardModal"); }
+@{Html.RenderPartial("PersonalDashboardModal");}
 
 @section scripts{@Scripts.Render("~/bundles/jqueryval")}
-@section MyScripts{<script src="~/MyScripts/PersonalDashboardNew.js"></script>}
+@section MyScripts{<script src="~/MyScripts/PersonalDashboardVariables.js"></script>
+    <script src="~/MyScripts/PersonalDashboardNew.js"></script>}

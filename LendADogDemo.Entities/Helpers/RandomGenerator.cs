@@ -2,7 +2,6 @@
 using LendADogDemo.Entities.Models;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Migrations;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
