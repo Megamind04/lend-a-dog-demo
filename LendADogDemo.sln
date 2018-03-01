@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LendADogDemo.MVC", "LendADo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LendADogDemo.Entities", "LendADogDemo.Entities\LendADogDemo.Entities.csproj", "{52B995F1-0D40-4E4F-AFB1-70DC6E423703}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LendADogDemo.UnitTests", "LendADogDemo.UnitTests\LendADogDemo.UnitTests.csproj", "{A067954D-37B6-4406-88B7-52ECD0AA44BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{52B995F1-0D40-4E4F-AFB1-70DC6E423703}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52B995F1-0D40-4E4F-AFB1-70DC6E423703}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52B995F1-0D40-4E4F-AFB1-70DC6E423703}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A067954D-37B6-4406-88B7-52ECD0AA44BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A067954D-37B6-4406-88B7-52ECD0AA44BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A067954D-37B6-4406-88B7-52ECD0AA44BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A067954D-37B6-4406-88B7-52ECD0AA44BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

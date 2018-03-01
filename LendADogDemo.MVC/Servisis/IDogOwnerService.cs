@@ -69,7 +69,7 @@ namespace LendADogDemo.MVC.Servisis
                     dogOwnerRepo.Update(usertTobeVerify);
                     unitOfWork.Commit();
 
-                    var requestMsgs = requestMessageRepo.Get(filter: r => r.SendFromID == RequestFromID);
+                    var requestMsgs = requestMessageRepo.Get(filter: r => r.SendFromID == RequestFromID).ToList();
 
                     foreach (var msg in requestMsgs)
                     {
