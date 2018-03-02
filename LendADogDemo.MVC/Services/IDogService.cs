@@ -8,7 +8,7 @@ using System.Diagnostics;
 using LendADogDemo.Entities.Helpers;
 using System.Drawing;
 
-namespace LendADogDemo.MVC.Servisis
+namespace LendADogDemo.MVC.Services
 {
     public interface IDogService
     {

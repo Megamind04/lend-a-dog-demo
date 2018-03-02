@@ -1,4 +1,4 @@
-﻿using LendADogDemo.MVC.Servisis;
+﻿using LendADogDemo.MVC.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

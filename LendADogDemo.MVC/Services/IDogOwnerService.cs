@@ -2,13 +2,12 @@
 using LendADogDemo.Entities.UoW;
 using LendADogDemo.MVC.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity.Core;
 using System.Diagnostics;
 using System.Linq;
 using LendADogDemo.Entities.Models;
 
-namespace LendADogDemo.MVC.Servisis
+namespace LendADogDemo.MVC.Services
 {
     public interface IDogOwnerService
     {

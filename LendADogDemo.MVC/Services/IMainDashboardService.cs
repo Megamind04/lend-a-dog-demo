@@ -7,7 +7,7 @@ using LendADogDemo.Entities.Interfaces;
 using LendADogDemo.Entities.UoW;
 using LendADogDemo.MVC.ViewModels;
 
-namespace LendADogDemo.MVC.Servisis
+namespace LendADogDemo.MVC.Services
 {
     public interface IMainDashboardService
     {

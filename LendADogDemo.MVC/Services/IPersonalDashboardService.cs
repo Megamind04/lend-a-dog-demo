@@ -8,7 +8,7 @@ using LendADogDemo.Entities.Models;
 using System.Diagnostics;
 using LendADogDemo.Entities.Helpers;
 
-namespace LendADogDemo.MVC.Servisis
+namespace LendADogDemo.MVC.Services
 {
     public interface IPersonalDashboardService
     {

@@ -1,5 +1,5 @@
 ﻿using LendADogDemo.Entities.Helpers;
-using LendADogDemo.MVC.Servisis;
+using LendADogDemo.MVC.Services;
 using Microsoft.AspNet.Identity;
 using System.Net;
 using System.Web.Mvc;

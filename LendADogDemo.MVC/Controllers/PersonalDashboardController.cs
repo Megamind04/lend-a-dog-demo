@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Web.Mvc;
-using LendADogDemo.MVC.Servisis;
+using LendADogDemo.MVC.Services;
 using Microsoft.AspNet.Identity;
 using LendADogDemo.Entities.Helpers;
 

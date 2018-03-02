@@ -212,10 +212,10 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\CSharpRazorViewEngine.cs" />
-    <Compile Include="Servisis\IDogOwnerService.cs" />
-    <Compile Include="Servisis\IDogService.cs" />
-    <Compile Include="Servisis\IMainDashboardService.cs" />
-    <Compile Include="Servisis\IPersonalDashboardService.cs" />
+    <Compile Include="Services\IDogOwnerService.cs" />
+    <Compile Include="Services\IDogService.cs" />
+    <Compile Include="Services\IMainDashboardService.cs" />
+    <Compile Include="Services\IPersonalDashboardService.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="ViewModels\BaseViewModels.cs" />
     <Compile Include="ViewModels\MainDashboardViewModel.cs" />

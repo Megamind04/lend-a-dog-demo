@@ -9,7 +9,7 @@ namespace LendADogDemo.MVC.App_Start
     using LendADogDemo.Entities.Infrastructure;
     using LendADogDemo.Entities.Interfaces;
     using LendADogDemo.Entities.UoW;
-    using LendADogDemo.MVC.Servisis;
+    using LendADogDemo.MVC.Services;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 
     using Ninject;

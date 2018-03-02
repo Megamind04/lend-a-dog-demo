@@ -2,7 +2,7 @@
 using System.Web;
 using System.Web.Mvc;
 using LendADogDemo.Entities.Helpers;
-using LendADogDemo.MVC.Servisis;
+using LendADogDemo.MVC.Services;
 using LendADogDemo.MVC.ViewModels;
 using Microsoft.AspNet.Identity;
 
